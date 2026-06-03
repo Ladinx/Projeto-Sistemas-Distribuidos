@@ -1,7 +1,6 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const { initializeDatabase } = require('./db');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -39,17 +38,6 @@ app.use('/restaurantes', restauranteRoutes);
 app.use('/', produtoRoutes);
 app.use('/pedidos', pedidoRoutes);
 
-const startServer = async () => {
-  if (process.env.DATABASE_URL) {
-    console.log('Connecting to database and running tables check...');
-    await initializeDatabase();
-  } else {
-    console.warn('DATABASE_URL is not set. Database connections will fail until configured.');
-  }
-
-  app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-  });
-};
-
-startServer();
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
