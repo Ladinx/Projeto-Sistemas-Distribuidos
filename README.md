@@ -34,8 +34,6 @@ Este é o repositório do projeto acadêmico de Programação Distribuída / Com
    npm run dev
    ```
 
-*Nota: Ao conectar ao banco pela primeira vez, a aplicação executará automaticamente o script de inicialização do schema (`src/schema.sql`) para criar todas as tabelas necessárias no banco local ou no Railway.*
-
 ---
 
 ## Variáveis de Ambiente (Backend)
