@@ -5,9 +5,9 @@ Este é o repositório do projeto acadêmico de Programação Distribuída. O pr
 ## Acesso Rápido (Produção)
 
 O projeto está implantado e disponível nos seguintes links:
-- **Frontend (Vercel):** *[Inserir URL da Vercel aqui]*
-- **Backend API (Railway):** *[Inserir URL do Railway aqui]*
-- **Interface da API (Swagger):** *[Inserir URL do Railway aqui]*/api-docs
+- **Frontend (Vercel):** https://projeto-sistemas-distribuidos.vercel.app/
+- **Backend API (Railway):** projeto-sistemas-distribuidos-production.up.railway.app 
+- **Interface da API (Swagger):** projeto-sistemas-distribuidos-production.up.railway.app/api-docs
 
 ---
 
