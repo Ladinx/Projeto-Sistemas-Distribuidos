@@ -1,8 +1,8 @@
-# Marketplace de Delivery (Nome a decidir) — Backend API & Mono-repo
+# Marketplace de Delivery (Nome a decidir)
 
-Este é o repositório do projeto acadêmico de Programação Distribuída / Computação em Nuvem. O projeto consiste em um clone simplificado de um marketplace de delivery no modelo **SaaS**, com backend em **Node.js + Express** (hospedado no Railway com PostgreSQL) e frontend em **React + Vite** (hospedado na Vercel).
+Este é o repositório do projeto acadêmico de Programação Distribuída. O projeto consiste em um clone simplificado de um marketplace de delivery no modelo **SaaS**, com backend em **Node.js + Express** (hospedado no Railway com PostgreSQL) e frontend em **React + Vite** (hospedado na Vercel).
 
-## Estrutura do Repositório (Mono-repo)
+## Estrutura do Repositório
 
 - `/frontend`: Aplicação React + Vite (aponta para a URL do backend hospedado no Railway).
 - `/backend`: API REST Express conectada ao PostgreSQL do Railway.
