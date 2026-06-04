@@ -3,7 +3,16 @@ const router = express.Router();
 const db = require('../db');
 const { authenticateToken, permitOnly } = require('../middleware/auth');
 
-// GET /restaurantes
+/**
+ * @openapi
+ * /restaurantes:
+ *   get:
+ *     tags: [Restaurantes]
+ *     summary: Listar todos os restaurantes
+ *     responses:
+ *       200:
+ *         description: Array de restaurantes cadastrados
+ */
 router.get('/', async (req, res) => {
   try {
     const result = await db.query(
@@ -17,7 +26,25 @@ router.get('/', async (req, res) => {
   }
 });
 
-// GET /restaurantes/:id
+/**
+ * @openapi
+ * /restaurantes/{id}:
+ *   get:
+ *     tags: [Restaurantes]
+ *     summary: Detalhes de um restaurante
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID do restaurante
+ *     responses:
+ *       200:
+ *         description: Dados do restaurante
+ *       404:
+ *         description: Restaurante não encontrado
+ */
 router.get('/:id', async (req, res) => {
   const { id } = req.params;
   try {
@@ -37,7 +64,45 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// PUT /restaurantes/:id
+/**
+ * @openapi
+ * /restaurantes/{id}:
+ *   put:
+ *     tags: [Restaurantes]
+ *     summary: Atualizar perfil do restaurante (autenticado)
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               nome:
+ *                 type: string
+ *               descricao:
+ *                 type: string
+ *               categoria:
+ *                 type: string
+ *               endereco:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Perfil atualizado
+ *       400:
+ *         description: Nome é obrigatório
+ *       403:
+ *         description: Acesso negado
+ *       404:
+ *         description: Restaurante não encontrado
+ */
 router.put('/:id', authenticateToken, permitOnly(['restaurante']), async (req, res) => {
   const { id } = req.params;
   const { nome, descricao, categoria, endereco } = req.body;

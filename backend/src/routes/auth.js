@@ -4,7 +4,51 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const db = require('../db');
 
-// Registro
+/**
+ * @openapi
+ * /auth/register:
+ *   post:
+ *     tags: [Autenticação]
+ *     summary: Registrar novo usuário
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - nome
+ *               - email
+ *               - senha
+ *               - tipo
+ *             properties:
+ *               nome:
+ *                 type: string
+ *                 example: "João Restaurante"
+ *               email:
+ *                 type: string
+ *                 example: "joao@restaurante.com"
+ *               senha:
+ *                 type: string
+ *                 example: "senha_segura"
+ *               tipo:
+ *                 type: string
+ *                 enum: [cliente, restaurante]
+ *               descricao:
+ *                 type: string
+ *                 example: "Melhor hambúrguer da cidade"
+ *               categoria:
+ *                 type: string
+ *                 example: "Hambúrgueres"
+ *               endereco:
+ *                 type: string
+ *                 example: "Rua das Flores, 123"
+ *     responses:
+ *       201:
+ *         description: Usuário criado com sucesso
+ *       400:
+ *         description: Erro de validação (campos obrigatórios ou e-mail já cadastrado)
+ */
 router.post('/register', async (req, res) => {
   const { nome, email, senha, tipo, descricao, categoria, endereco } = req.body;
 
@@ -40,7 +84,34 @@ router.post('/register', async (req, res) => {
   }
 });
 
-// Login
+/**
+ * @openapi
+ * /auth/login:
+ *   post:
+ *     tags: [Autenticação]
+ *     summary: Autenticar usuário e obter token JWT
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - senha
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 example: "joao@restaurante.com"
+ *               senha:
+ *                 type: string
+ *                 example: "senha_segura"
+ *     responses:
+ *       200:
+ *         description: Login bem-sucedido, retorna token e dados do usuário
+ *       401:
+ *         description: Credenciais inválidas
+ */
 router.post('/login', async (req, res) => {
   const { email, senha } = req.body;
 
