@@ -1,6 +1,15 @@
 # Marketplace de Delivery (Nome a decidir)
 
-Este é o repositório do projeto acadêmico de Programação Distribuída. O projeto consiste em um clone simplificado de um marketplace de delivery no modelo **SaaS**, com backend em **Node.js + Express** (hospedado no Railway com PostgreSQL) e frontend em **React + Vite** (hospedado na Vercel).
+Este é o repositório do projeto acadêmico de Programação Distribuída. O projeto consiste em um clone simplificado de um marketplace de delivery no modelo **SaaS**, implantado em nuvem pública (PaaS).
+
+## Acesso Rápido (Produção)
+
+O projeto está implantado e disponível nos seguintes links:
+- **Frontend (Vercel):** *[Inserir URL da Vercel aqui]*
+- **Backend API (Railway):** *[Inserir URL do Railway aqui]*
+- **Interface da API (Swagger):** *[Inserir URL do Railway aqui]*/api-docs
+
+---
 
 ## Estrutura do Repositório
 
@@ -9,7 +18,16 @@ Este é o repositório do projeto acadêmico de Programação Distribuída. O pr
 
 ---
 
-## Backend Setup & Desenvolvimento Local
+## Documentação da API
+
+A documentação detalhada das rotas da API e a interface interativa do Swagger estão descritas em:
+- **[Documentação da API (api.md)](api.md)**
+
+---
+
+## Desenvolvimento Local / Setup de Teste (Opcional)
+
+Caso queira executar os serviços localmente para fins de testes ou desenvolvimento, siga as instruções abaixo:
 
 ### Pré-requisitos
 - Node.js (v18 ou superior recomendado)
@@ -34,25 +52,9 @@ Este é o repositório do projeto acadêmico de Programação Distribuída. O pr
    npm run dev
    ```
 
----
-
-## Variáveis de Ambiente (Backend)
-
-No arquivo `.env`, certifique-se de configurar:
+### Variáveis de Ambiente (Backend)
+No arquivo `backend/.env`, certifique-se de configurar:
 - `PORT`: Porta do servidor local (padrão: `5000`).
 - `DATABASE_URL`: URI de conexão do PostgreSQL (ex: `postgresql://usuario:senha@localhost:5432/nome_banco`).
 - `JWT_SECRET`: Chave secreta de assinatura do token JWT.
-- `FRONTEND_URL`: URL da Vercel (em produção) para fins de liberação no CORS.
-
----
-
-## Documentação da API & Swagger
-
-A documentação detalhada das rotas da API, incluindo formatos de requisição, respostas e a interface interativa do Swagger, foi movida para um arquivo dedicado:
-
-- **[Documentação da API (api.md)](file:///home/ladinx/Documentos/sistemas_distribuidos/Projeto/api.md)**
-
-### Acesso rápido ao Swagger:
-Quando o backend estiver rodando, você pode acessar a interface interativa do Swagger em:
-- [http://localhost:5000/api-docs](http://localhost:5000/api-docs)
-
+- `FRONTEND_URL`: URL da Vercel (em produção) ou localhost para liberação no CORS.
