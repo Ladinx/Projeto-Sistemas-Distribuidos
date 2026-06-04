@@ -6,7 +6,7 @@ const options = {
     info: {
       title: 'Marketplace Delivery API',
       version: '1.0.0',
-      description: 'API REST do marketplace de delivery — Projeto acadêmico de Programação Distribuída / Computação em Nuvem.',
+      description: 'API REST do marketplace de delivery — Projeto acadêmico de Programação Distribuída.',
     },
     servers: [
       {
