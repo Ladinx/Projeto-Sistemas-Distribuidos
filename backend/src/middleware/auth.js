@@ -8,7 +8,7 @@ const authenticateToken = (req, res, next) => {
     return res.status(401).json({ error: 'Token de autenticação não fornecido.' });
   }
 
-  jwt.verify(token, process.env.JWT_SECRET || 'supersecretjwtkey123!@#', (err, user) => {
+  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
     if (err) {
       return res.status(403).json({ error: 'Token inválido ou expirado.' });
     }

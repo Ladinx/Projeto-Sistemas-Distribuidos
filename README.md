@@ -6,8 +6,7 @@ Este é o repositório do projeto acadêmico de Programação Distribuída. O pr
 
 O projeto está implantado e disponível nos seguintes links:
 - **Frontend (Vercel):** https://projeto-sistemas-distribuidos.vercel.app/
-- **Backend API (Railway):** projeto-sistemas-distribuidos-production.up.railway.app 
-- **Interface da API (Swagger):** projeto-sistemas-distribuidos-production.up.railway.app/api-docs
+- **Backend API (Railway):** projeto-sistemas-distribuidos-production.up.railway.app
 
 ---
 
@@ -20,7 +19,7 @@ O projeto está implantado e disponível nos seguintes links:
 
 ## Documentação da API
 
-A documentação detalhada das rotas da API e a interface interativa do Swagger estão descritas em:
+A documentação detalhada das rotas da API está disponível em:
 - **[Documentação da API (api.md)](api.md)**
 
 ---

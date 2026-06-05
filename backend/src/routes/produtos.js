@@ -3,23 +3,7 @@ const router = express.Router();
 const db = require('../db');
 const { authenticateToken, permitOnly } = require('../middleware/auth');
 
-/**
- * @openapi
- * /restaurantes/{id}/produtos:
- *   get:
- *     tags: [Produtos]
- *     summary: Listar cardápio de um restaurante
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: integer
- *         description: ID do restaurante
- *     responses:
- *       200:
- *         description: Array de produtos do restaurante
- */
+// GET /restaurantes/:id/produtos -> Lista o cardápio
 router.get('/restaurantes/:id/produtos', async (req, res) => {
   const { id } = req.params;
   try {
@@ -34,47 +18,7 @@ router.get('/restaurantes/:id/produtos', async (req, res) => {
   }
 });
 
-/**
- * @openapi
- * /restaurantes/{id}/produtos:
- *   post:
- *     tags: [Produtos]
- *     summary: Adicionar prato ao cardápio (autenticado, apenas restaurante dono)
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: integer
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - nome
- *               - preco
- *             properties:
- *               nome:
- *                 type: string
- *                 example: "Hambúrguer Duplo Cheddar"
- *               descricao:
- *                 type: string
- *                 example: "Pão, 2x carnes, muito cheddar e bacon"
- *               preco:
- *                 type: number
- *                 example: 32.90
- *     responses:
- *       201:
- *         description: Produto criado
- *       400:
- *         description: Nome e Preço são obrigatórios
- *       403:
- *         description: Acesso negado
- */
+// POST /restaurantes/:id/produtos -> Adicionar prato
 router.post('/restaurantes/:id/produtos', authenticateToken, permitOnly(['restaurante']), async (req, res) => {
   const { id } = req.params;
   const { nome, descricao, preco } = req.body;
@@ -103,45 +47,7 @@ router.post('/restaurantes/:id/produtos', authenticateToken, permitOnly(['restau
   }
 });
 
-/**
- * @openapi
- * /produtos/{id}:
- *   put:
- *     tags: [Produtos]
- *     summary: Editar prato (autenticado, apenas restaurante dono)
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: integer
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               nome:
- *                 type: string
- *               descricao:
- *                 type: string
- *               preco:
- *                 type: number
- *               ativo:
- *                 type: boolean
- *     responses:
- *       200:
- *         description: Produto atualizado
- *       400:
- *         description: Nome e Preço são obrigatórios
- *       403:
- *         description: Acesso negado
- *       404:
- *         description: Produto não encontrado
- */
+// PUT /produtos/:id -> Editar prato
 router.put('/produtos/:id', authenticateToken, permitOnly(['restaurante']), async (req, res) => {
   const { id } = req.params;
   const { nome, descricao, preco, ativo } = req.body;
@@ -176,28 +82,7 @@ router.put('/produtos/:id', authenticateToken, permitOnly(['restaurante']), asyn
   }
 });
 
-/**
- * @openapi
- * /produtos/{id}:
- *   delete:
- *     tags: [Produtos]
- *     summary: Remover prato (autenticado, apenas restaurante dono)
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: integer
- *     responses:
- *       200:
- *         description: Produto removido
- *       403:
- *         description: Acesso negado
- *       404:
- *         description: Produto não encontrado
- */
+// DELETE /produtos/:id -> Remover prato
 router.delete('/produtos/:id', authenticateToken, permitOnly(['restaurante']), async (req, res) => {
   const { id } = req.params;
 

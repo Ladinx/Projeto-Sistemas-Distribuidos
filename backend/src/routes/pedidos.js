@@ -3,48 +3,7 @@ const router = express.Router();
 const db = require('../db');
 const { authenticateToken, permitOnly } = require('../middleware/auth');
 
-/**
- * @openapi
- * /pedidos:
- *   post:
- *     tags: [Pedidos]
- *     summary: Finalizar pedido / checkout (autenticado, apenas cliente)
- *     security:
- *       - bearerAuth: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - restaurante_id
- *               - itens
- *               - endereco_entrega
- *             properties:
- *               restaurante_id:
- *                 type: integer
- *                 example: 1
- *               endereco_entrega:
- *                 type: string
- *                 example: "Rua Salvador, 45 - Apto 302"
- *               itens:
- *                 type: array
- *                 items:
- *                   type: object
- *                   properties:
- *                     produto_id:
- *                       type: integer
- *                     quantidade:
- *                       type: integer
- *     responses:
- *       201:
- *         description: Pedido criado com sucesso
- *       400:
- *         description: Dados inválidos
- *       404:
- *         description: Restaurante ou produto não encontrado
- */
+// POST /pedidos -> Checkout (apenas cliente)
 router.post('/', authenticateToken, permitOnly(['cliente']), async (req, res) => {
   const { restaurante_id, itens, endereco_entrega } = req.body;
   const cliente_id = req.user.id;
@@ -130,18 +89,7 @@ router.post('/', authenticateToken, permitOnly(['cliente']), async (req, res) =>
   }
 });
 
-/**
- * @openapi
- * /pedidos:
- *   get:
- *     tags: [Pedidos]
- *     summary: Listar pedidos do usuário logado (autenticado)
- *     security:
- *       - bearerAuth: []
- *     responses:
- *       200:
- *         description: Array de pedidos (filtrados por tipo de usuário)
- */
+// GET /pedidos -> Listar pedidos (Cliente ou Restaurante)
 router.get('/', authenticateToken, async (req, res) => {
   const { id, tipo } = req.user;
   try {
@@ -176,28 +124,7 @@ router.get('/', authenticateToken, async (req, res) => {
   }
 });
 
-/**
- * @openapi
- * /pedidos/{id}:
- *   get:
- *     tags: [Pedidos]
- *     summary: Detalhes de um pedido (autenticado, cliente ou restaurante dono)
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: integer
- *     responses:
- *       200:
- *         description: Detalhes completos do pedido com itens
- *       403:
- *         description: Acesso negado
- *       404:
- *         description: Pedido não encontrado
- */
+// GET /pedidos/:id -> Detalhes de um pedido (Cliente ou Restaurante)
 router.get('/:id', authenticateToken, async (req, res) => {
   const { id } = req.params;
   const userId = req.user.id;
@@ -246,40 +173,7 @@ router.get('/:id', authenticateToken, async (req, res) => {
   }
 });
 
-/**
- * @openapi
- * /pedidos/{id}/status:
- *   put:
- *     tags: [Pedidos]
- *     summary: Atualizar status do pedido (autenticado, apenas restaurante dono)
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: integer
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               status:
- *                 type: string
- *                 enum: [pendente, preparando, em_entrega, entregue, cancelado]
- *     responses:
- *       200:
- *         description: Status atualizado
- *       400:
- *         description: Status inválido
- *       403:
- *         description: Acesso negado
- *       404:
- *         description: Pedido não encontrado
- */
+// PUT /pedidos/:id/status -> Atualizar status do pedido (Apenas restaurante do pedido)
 router.put('/:id/status', authenticateToken, permitOnly(['restaurante']), async (req, res) => {
   const { id } = req.params;
   const { status } = req.body;
