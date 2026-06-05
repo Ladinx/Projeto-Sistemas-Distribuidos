@@ -1,0 +1,239 @@
+@import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Baloo+2:wght@400;600;700&display=swap');
+
+@font-face {
+  font-family: 'TheAugusta';
+  src: url('../assets/fonts/The Augusta.otf') format('opentype');
+}
+.navbar__wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  width: 100%;
+}
+
+.navbar {
+  background: #F28C38;
+  padding: 0 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 80px;
+  position: relative;
+}
+
+.navbar__logo {
+  font-family: 'TheAugusta', cursive;
+  font-size: 2.2rem;
+  color: #D42B2B;
+  line-height: 1;
+  display: flex;
+  flex-direction: column;
+  cursor: default;
+}
+
+.navbar__logo span {
+  font-size: 0.75rem;
+  color: #7B2FBE;
+  font-family: 'Baloo 2', sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-top: -4px;
+}
+
+.navbar__links {
+  display: flex;
+  gap: 2.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar__links a {
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.25rem;
+  color: white;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.navbar__links a:hover {
+  color: #D42B2B;
+}
+
+.navbar__cart-btn {
+  background: white;
+  border: none;
+  color: #F28C38;
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  transition: transform 0.2s;
+}
+
+.navbar__cart-btn:hover {
+  transform: scale(1.1);
+}
+
+.navbar__cart-badge {
+  position: absolute;
+  top: -6px;
+  right: -8px;
+  background: #D42B2B;
+  color: white;
+  font-size: 0.65rem;
+  font-weight: 700;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.navbar__burger-container {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.navbar__burger {
+  width: 70px;
+  height: 70px;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15));
+}
+
+/* Steam animations */
+.steam {
+  transform-origin: bottom center;
+  animation: float 2s ease-in-out infinite;
+}
+
+.steam-1 {
+  animation-delay: 0s;
+}
+
+.steam-2 {
+  animation-delay: 0.4s;
+}
+
+.steam-3 {
+  animation-delay: 0.8s;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0) scaleY(1);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    transform: translateY(-20px) scaleY(0.8);
+    opacity: 0;
+  }
+}
+
+.cart-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: transparent;
+}
+.cart-drawer {
+  position: fixed;
+  top: 0;
+  right: -340px;
+  width: 320px;
+  height: 100vh;
+  background: rgba(30, 20, 10, 0.75);
+  backdrop-filter: blur(12px);
+  z-index: 201;
+  transition: right 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+  color: white;
+}
+
+.cart-drawer--open {
+  right: 0;
+}
+
+.cart-drawer__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.cart-drawer__header button {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
+
+.cart-drawer__empty {
+  color: rgba(255,255,255,0.5);
+  font-size: 0.9rem;
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.cart-drawer__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  flex: 1;
+}
+
+.cart-drawer__item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(255,255,255,0.15);
+  padding-bottom: 0.75rem;
+  font-size: 0.95rem;
+}
+
+.cart-drawer__item-right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.cart-drawer__item-right button {
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.6);
+  cursor: pointer;
+}
+
+.cart-drawer__total {
+  border-top: 1px solid rgba(255,255,255,0.2);
+  padding-top: 1rem;
+  font-size: 1.1rem;
+  text-align: right;
+   overflow: hidden;
+}

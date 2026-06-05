@@ -1,0 +1,229 @@
+@import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Baloo+2:wght@400;600;700&display=swap');
+
+.pedidos {
+  font-family: 'Baloo 2', sans-serif;
+  background: #F0E8D8;
+  min-height: 100vh;
+  padding-top: 98px;
+}
+
+.ingredients-stripe {
+  display: flex;
+  height: 18px;
+}
+
+.stripe {
+  flex: 1;
+}
+
+.pedidos__container {
+  padding: 3rem 2.5rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.pedidos__title {
+  font-family: 'Fredoka One', cursive;
+  font-size: 2.5rem;
+  color: #2C1810;
+  text-align: center;
+  margin: 0 0 3rem;
+}
+
+.pedidos__loading,
+.pedidos__error,
+.pedidos__empty {
+  text-align: center;
+  font-size: 1.1rem;
+  color: #6b6375;
+  padding: 2rem;
+}
+
+.pedidos__error {
+  color: #D42B2B;
+}
+
+.pedidos__list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.pedido-card {
+  background: white;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.pedido-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.pedido-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  border-bottom: 2px solid #F0E8D8;
+  padding-bottom: 1rem;
+}
+
+.pedido-card__info-main {
+  flex: 1;
+}
+
+.pedido-card__number {
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.4rem;
+  color: #D42B2B;
+  margin: 0;
+}
+
+.pedido-card__date {
+  margin: 0.3rem 0 0;
+  font-size: 0.9rem;
+  color: #6b6375;
+}
+
+.pedido-card__status {
+  padding: 0.6rem 1.2rem;
+  border-radius: 50px;
+  color: white;
+  font-weight: 700;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.pedido-card__details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.pedido-card__restaurante,
+.pedido-card__endereco {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #6b6375;
+}
+
+.pedido-card__restaurante strong,
+.pedido-card__endereco strong {
+  color: #2C1810;
+  font-weight: 700;
+}
+
+.pedido-card__items {
+  background: #F9F7F0;
+  padding: 1rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+}
+
+.pedido-card__items strong {
+  color: #2C1810;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.pedido-card__items ul {
+  margin: 0;
+  padding-left: 1.5rem;
+  list-style: none;
+}
+
+.pedido-card__items li {
+  padding: 0.3rem 0;
+  color: #6b6375;
+}
+
+.pedido-card__items li:before {
+  content: '🍔 ';
+  margin-right: 0.5rem;
+}
+
+.pedido-card__no-items {
+  margin: 0;
+  color: #6b6375;
+  font-style: italic;
+}
+
+.pedido-card__footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  border-top: 2px solid #F0E8D8;
+  padding-top: 1rem;
+}
+
+.pedido-card__total {
+  font-size: 1.1rem;
+  color: #2C1810;
+}
+
+.pedido-card__total strong {
+  font-weight: 700;
+}
+
+.pedido-card__button {
+  background: #F28C38;
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 50px;
+  font-family: 'Fredoka One', cursive;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+  white-space: nowrap;
+}
+
+.pedido-card__button:hover {
+  background: #D42B2B;
+  transform: scale(1.05);
+}
+
+.pedido-card__button:active {
+  transform: scale(0.98);
+}
+
+@media (max-width: 768px) {
+  .pedidos__container {
+    padding: 2rem 1.5rem;
+  }
+
+  .pedidos__title {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .pedido-card__header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .pedido-card__status {
+    align-self: flex-start;
+  }
+
+  .pedido-card__footer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .pedido-card__button {
+    width: 100%;
+    text-align: center;
+  }
+}
