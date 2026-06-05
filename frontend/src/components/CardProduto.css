@@ -24,11 +24,6 @@
   position: relative;
 }
 
-.card-produto__img-placeholder {
-  font-size: 2.5rem;
-  opacity: 0.5;
-}
-
 .card-produto__preco {
   position: absolute;
   top: 0.5rem;

@@ -7,7 +7,6 @@ export default function CardProduto({ nome, preco, imagem, onAdicionar }) {
         className="card-produto__img"
         style={imagem ? { backgroundImage: `url(${imagem})` } : {}}
       >
-        {!imagem && <span className="card-produto__img-placeholder">🍔</span>}
         <span className="card-produto__preco">R$ {preco}</span>
       </div>
       <div className="card-produto__footer">
