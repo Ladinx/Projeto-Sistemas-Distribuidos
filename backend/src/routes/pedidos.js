@@ -45,6 +45,7 @@ const { authenticateToken, permitOnly } = require('../middleware/auth');
  *       404:
  *         description: Restaurante ou produto não encontrado
  */
+// corrige p verificação pelo restaurante.id
 router.post('/', authenticateToken, permitOnly(['cliente']), async (req, res) => {
   const { restaurante_id, itens, endereco_entrega } = req.body;
   const cliente_id = req.user.id;
@@ -57,7 +58,7 @@ router.post('/', authenticateToken, permitOnly(['cliente']), async (req, res) =>
   try {
     await client.query('BEGIN');
 
-    const restCheck = await client.query('SELECT id FROM usuarios WHERE id = $1 AND tipo = $2', [restaurante_id, 'restaurante']);
+    const restCheck = await client.query('SELECT id FROM restaurantes WHERE id = $1', [restaurante_id]);
     if (restCheck.rows.length === 0) {
       await client.query('ROLLBACK');
       return res.status(404).json({ error: 'Restaurante não encontrado.' });
@@ -151,9 +152,9 @@ router.get('/', authenticateToken, async (req, res) => {
     if (tipo === 'cliente') {
       queryText = `
         SELECT p.id, p.status, p.total, p.endereco_entrega, p.criado_em,
-               u.nome AS restaurante_nome
+               r.nome AS restaurante_nome
         FROM pedidos p
-        JOIN usuarios u ON p.restaurante_id = u.id
+        JOIN restaurantes r ON p.restaurante_id = r.id
         WHERE p.cliente_id = $1
         ORDER BY p.criado_em DESC
       `;
@@ -163,7 +164,8 @@ router.get('/', authenticateToken, async (req, res) => {
                u.nome AS cliente_nome
         FROM pedidos p
         JOIN usuarios u ON p.cliente_id = u.id
-        WHERE p.restaurante_id = $1
+        JOIN restaurantes r ON p.restaurante_id = r.id
+        WHERE r.usuario_id = $1
         ORDER BY p.criado_em DESC
       `;
     }
@@ -198,6 +200,8 @@ router.get('/', authenticateToken, async (req, res) => {
  *       404:
  *         description: Pedido não encontrado
  */
+// faz join com restaurantes
+// ownership do restaurante é verificada via query ao invés de comparar direto por id
 router.get('/:id', authenticateToken, async (req, res) => {
   const { id } = req.params;
   const userId = req.user.id;
@@ -209,7 +213,7 @@ router.get('/:id', authenticateToken, async (req, res) => {
              c.nome AS cliente_nome, r.nome AS restaurante_nome
       FROM pedidos p
       JOIN usuarios c ON p.cliente_id = c.id
-      JOIN usuarios r ON p.restaurante_id = r.id
+      JOIN restaurantes r ON p.restaurante_id = r.id
       WHERE p.id = $1
     `;
     const orderResult = await db.query(orderQuery, [id]);
@@ -223,8 +227,11 @@ router.get('/:id', authenticateToken, async (req, res) => {
     if (userTipo === 'cliente' && pedido.cliente_id !== userId) {
       return res.status(403).json({ error: 'Acesso negado.' });
     }
-    if (userTipo === 'restaurante' && pedido.restaurante_id !== userId) {
-      return res.status(403).json({ error: 'Acesso negado.' });
+    if (userTipo === 'restaurante') {
+      const restCheck = await db.query('SELECT id FROM restaurantes WHERE id = $1 AND usuario_id = $2', [pedido.restaurante_id, userId]);
+      if (restCheck.rows.length === 0) {
+        return res.status(403).json({ error: 'Acesso negado.' });
+      }
     }
 
     const itemsQuery = `
@@ -290,13 +297,19 @@ router.put('/:id/status', authenticateToken, permitOnly(['restaurante']), async 
     return res.status(400).json({ error: `Status inválido. Deve ser um de: ${validStatuses.join(', ')}` });
   }
 
-  try {
+  try { // busca rest id via user id do token antes de veririfcar ownership
+    const restCheck = await db.query('SELECT id FROM restaurantes WHERE usuario_id = $1', [restaurante_id]);
+    if (restCheck.rows.length === 0) {
+      return res.status(403).json({ error: 'Acesso negado. Restaurante não encontrado.' });
+    }
+    const restauranteId = restCheck.rows[0].id;
+
     const orderCheck = await db.query('SELECT restaurante_id FROM pedidos WHERE id = $1', [id]);
     if (orderCheck.rows.length === 0) {
       return res.status(404).json({ error: 'Pedido não encontrado.' });
     }
 
-    if (orderCheck.rows[0].restaurante_id !== restaurante_id) {
+    if (orderCheck.rows[0].restaurante_id !== restauranteId) {
       return res.status(403).json({ error: 'Acesso negado. Este pedido pertence a outro restaurante.' });
     }
 
