@@ -1,2 +1,9 @@
 # Documento interno de handoff (não vai pro GitHub)
 handoff.md
+
+# variáveis de ambiente
+.env
+# n sobre banco p github
+*.db
+
+
