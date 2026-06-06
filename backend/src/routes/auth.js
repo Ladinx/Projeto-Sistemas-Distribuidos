@@ -3,8 +3,9 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const db = require('../db');
+const { authenticateToken } = require('../middleware/auth');
 
-// Registro
+// p cliente inse apenas em usuario e p restaurante faz nos dois
 router.post('/register', async (req, res) => {
   const { nome, email, senha, tipo, descricao, categoria, endereco } = req.body;
 
@@ -16,8 +17,9 @@ router.post('/register', async (req, res) => {
     return res.status(400).json({ error: "O tipo de usuário deve ser 'cliente' ou 'restaurante'" });
   }
 
+  const client = await db.pool.connect();
   try {
-    const userCheck = await db.query('SELECT id FROM usuarios WHERE email = $1', [email]);
+    const userCheck = await client.query('SELECT id FROM usuarios WHERE email = $1', [email]);
     if (userCheck.rows.length > 0) {
       return res.status(400).json({ error: 'E-mail já cadastrado' });
     }
@@ -25,22 +27,37 @@ router.post('/register', async (req, res) => {
     const saltRounds = 10;
     const senhaHash = await bcrypt.hash(senha, saltRounds);
 
-    const queryText = `
-      INSERT INTO usuarios (nome, email, senha, tipo, descricao, categoria, endereco)
-      VALUES ($1, $2, $3, $4, $5, $6, $7)
-      RETURNING id, nome, email, tipo, descricao, categoria, endereco
-    `;
-    const values = [nome, email, senhaHash, tipo, descricao || null, categoria || null, endereco || null];
-    const result = await db.query(queryText, values);
+    await client.query('BEGIN');
 
-    return res.status(201).json(result.rows[0]);
+    const usuarioResult = await client.query(
+      `INSERT INTO usuarios (nome, email, senha, tipo)
+       VALUES ($1, $2, $3, $4)
+       RETURNING id, nome, email, tipo`,
+      [nome, email, senhaHash, tipo]
+    );
+    const usuario = usuarioResult.rows[0];
+
+    if (tipo === 'restaurante') {
+      await client.query(
+        `INSERT INTO restaurantes (usuario_id, nome, descricao, categoria, endereco)
+         VALUES ($1, $2, $3, $4, $5)`,
+        [usuario.id, nome, descricao || null, categoria || null, endereco || null]
+      );
+    }
+
+    await client.query('COMMIT');
+
+    return res.status(201).json(usuario);
   } catch (error) {
+    await client.query('ROLLBACK');
     console.error('Erro no registro:', error);
     return res.status(500).json({ error: 'Erro interno no servidor' });
+  } finally {
+    client.release();
   }
 });
 
-// Login
+// retorno limpo de login
 router.post('/login', async (req, res) => {
   const { email, senha } = req.body;
 
@@ -72,14 +89,30 @@ router.post('/login', async (req, res) => {
         id: usuario.id,
         nome: usuario.nome,
         email: usuario.email,
-        tipo: usuario.tipo,
-        descricao: usuario.descricao,
-        categoria: usuario.categoria,
-        endereco: usuario.endereco
+        tipo: usuario.tipo
       }
     });
   } catch (error) {
     console.error('Erro no login:', error);
+    return res.status(500).json({ error: 'Erro interno no servidor' });
+  }
+});
+
+// retorna dados do user logado a partir do token
+router.get('/me', authenticateToken, async (req, res) => {
+  try {
+    const result = await db.query(
+      'SELECT id, nome, email, tipo, criado_em FROM usuarios WHERE id = $1',
+      [req.user.id]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Usuário não encontrado.' });
+    }
+
+    return res.json(result.rows[0]);
+  } catch (error) {
+    console.error('Erro ao buscar usuário autenticado:', error);
     return res.status(500).json({ error: 'Erro interno no servidor' });
   }
 });

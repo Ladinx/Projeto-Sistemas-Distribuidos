@@ -24,8 +24,8 @@ async function request(endpoint, options = {}) {
     ...options,
     headers,
   });
-
-  const data = await res.json();
+  // verifica antes de tentar parsear o json
+  const data = res.status === 204 ? null : await res.json();
 
   if (!res.ok) {
     throw { status: res.status, ...data };
@@ -38,6 +38,8 @@ export const api = {
   // Auth
   register: (body) => request('/auth/register', { method: 'POST', body: JSON.stringify(body) }),
   login: (body) => request('/auth/login', { method: 'POST', body: JSON.stringify(body) }),
+  me: () => request('/auth/me'),
+  logout: () => removeToken(),
 
   // Restaurantes
   getRestaurantes: () => request('/restaurantes'),
@@ -55,6 +57,10 @@ export const api = {
   getPedidos: () => request('/pedidos'),
   getPedido: (id) => request(`/pedidos/${id}`),
   updatePedidoStatus: (id, body) => request(`/pedidos/${id}/status`, { method: 'PUT', body: JSON.stringify(body) }),
+
+  // Pagamentos
+  createPagamento: (pedidoId, body) => request(`/pagamentos/${pedidoId}`, { method: 'POST', body: JSON.stringify(body) }),
+  getPagamento: (pedidoId) => request(`/pagamentos/${pedidoId}`),
 
   // Token helpers
   setToken,

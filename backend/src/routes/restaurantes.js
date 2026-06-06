@@ -3,12 +3,14 @@ const router = express.Router();
 const db = require('../db');
 const { authenticateToken, permitOnly } = require('../middleware/auth');
 
-// GET /restaurantes
+// join entre restaurante e user, retorna url da pfp tbm
 router.get('/', async (req, res) => {
   try {
     const result = await db.query(
-      'SELECT id, nome, email, descricao, categoria, endereco, criado_em FROM usuarios WHERE tipo = $1 ORDER BY nome ASC',
-      ['restaurante']
+      `SELECT r.id, r.nome, u.email, r.descricao, r.categoria, r.endereco, r.foto_url, r.criado_em
+       FROM restaurantes r
+       JOIN usuarios u ON r.usuario_id = u.id
+       ORDER BY r.nome ASC`
     );
     return res.json(result.rows);
   } catch (error) {
@@ -22,8 +24,11 @@ router.get('/:id', async (req, res) => {
   const { id } = req.params;
   try {
     const result = await db.query(
-      'SELECT id, nome, email, descricao, categoria, endereco, criado_em FROM usuarios WHERE id = $1 AND tipo = $2',
-      [id, 'restaurante']
+      `SELECT r.id, r.nome, u.email, r.descricao, r.categoria, r.endereco, r.foto_url, r.criado_em
+       FROM restaurantes r
+       JOIN usuarios u ON r.usuario_id = u.id
+       WHERE r.id = $1`,
+      [id]
     );
 
     if (result.rows.length === 0) {
@@ -37,32 +42,32 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// PUT /restaurantes/:id
+// correção da verificação de ownership
 router.put('/:id', authenticateToken, permitOnly(['restaurante']), async (req, res) => {
   const { id } = req.params;
   const { nome, descricao, categoria, endereco } = req.body;
-
-  if (parseInt(id) !== req.user.id) {
-    return res.status(403).json({ error: 'Acesso negado. Não é permitido editar outros perfis.' });
-  }
 
   if (!nome) {
     return res.status(400).json({ error: 'O nome é obrigatório.' });
   }
 
   try {
+    const restCheck = await db.query(
+      'SELECT id FROM restaurantes WHERE id = $1 AND usuario_id = $2',
+      [id, req.user.id]
+    );
+    if (restCheck.rows.length === 0) {
+      return res.status(403).json({ error: 'Acesso negado. Não é permitido editar outros perfis.' });
+    }
+
     const queryText = `
-      UPDATE usuarios
+      UPDATE restaurantes
       SET nome = $1, descricao = $2, categoria = $3, endereco = $4
-      WHERE id = $5 AND tipo = 'restaurante'
-      RETURNING id, nome, email, descricao, categoria, endereco
+      WHERE id = $5
+      RETURNING id, nome, descricao, categoria, endereco, foto_url
     `;
     const values = [nome, descricao || null, categoria || null, endereco || null, id];
     const result = await db.query(queryText, values);
-
-    if (result.rows.length === 0) {
-      return res.status(404).json({ error: 'Restaurante não encontrado.' });
-    }
 
     return res.json(result.rows[0]);
   } catch (error) {

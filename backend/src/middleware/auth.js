@@ -1,4 +1,10 @@
+// add a guard no topo ao invés de verficar dentro do callback
+// assim o erro já aparece qnd sobre o server e n na primeira request autenticada
 const jwt = require('jsonwebtoken');
+
+if (!process.env.JWT_SECRET) {
+  throw new Error('JWT_SECRET não definida!! Verifique o arquivo .env');
+}
 
 const authenticateToken = (req, res, next) => {
   const authHeader = req.headers['authorization'];

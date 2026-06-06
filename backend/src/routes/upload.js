@@ -1,0 +1,1 @@
+// não tá implementado!! tem q decidir ainda se vaos fazer add de imgs e se sim decidir onde armazanear
