@@ -1,0 +1,166 @@
+@import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Baloo+2:wght@400;600;700&display=swap');
+
+.auth {
+  font-family: 'Baloo 2', sans-serif;
+  background: #F0E8D8;
+  min-height: 100vh;
+  padding-top: 98px;
+}
+
+.ingredients-stripe {
+  display: flex;
+  height: 18px;
+}
+
+.stripe {
+  flex: 1;
+}
+
+.auth__container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 98px - 18px);
+  padding: 2rem;
+}
+
+.auth__box {
+  background: white;
+  border-radius: 20px;
+  padding: 2.5rem;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.auth__title {
+  font-family: 'Fredoka One', cursive;
+  font-size: 2rem;
+  color: #2C1810;
+  text-align: center;
+  margin: 0 0 2rem;
+}
+
+.auth__tabs {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  border-bottom: 2px solid #F0E8D8;
+}
+
+.auth__tab {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  background: none;
+  border: none;
+  font-family: 'Fredoka One', cursive;
+  font-size: 1rem;
+  color: #6b6375;
+  cursor: pointer;
+  transition: color 0.3s ease;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  font-weight: 700;
+}
+
+.auth__tab:hover {
+  color: #F28C38;
+}
+
+.auth__tab--active {
+  color: #F28C38;
+  border-bottom-color: #F28C38;
+}
+
+.auth__form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-label {
+  font-family: 'Fredoka One', cursive;
+  font-size: 0.9rem;
+  color: #2C1810;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.form-input {
+  padding: 0.75rem 1rem;
+  border: 2px solid #F0E8D8;
+  border-radius: 8px;
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 1rem;
+  color: #2C1810;
+  background: white;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #F28C38;
+  box-shadow: 0 0 0 3px rgba(242, 140, 56, 0.1);
+}
+
+.form-input::placeholder {
+  color: #a8a8a8;
+}
+
+.auth__error {
+  background: #FFE0E0;
+  color: #D42B2B;
+  padding: 1rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  text-align: center;
+  border-left: 4px solid #D42B2B;
+}
+
+.auth__submit {
+  background: #F28C38;
+  color: white;
+  border: none;
+  padding: 1rem;
+  border-radius: 50px;
+  font-family: 'Fredoka One', cursive;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+  margin-top: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.auth__submit:hover:not(:disabled) {
+  background: #D42B2B;
+  transform: scale(1.05);
+}
+
+.auth__submit:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.auth__submit:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+  .auth__box {
+    padding: 2rem 1.5rem;
+    max-width: 100%;
+  }
+
+  .auth__title {
+    font-size: 1.75rem;
+  }
+}

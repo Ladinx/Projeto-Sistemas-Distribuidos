@@ -114,6 +114,28 @@
   filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15));
 }
 
+.navbar__auth-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: white;
+  border: none;
+  color: #F28C38;
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 8px 18px;
+  border-radius: 999px;
+  transition: background 0.2s, color 0.2s, transform 0.2s;
+}
+
+.navbar__auth-btn:hover {
+  background: #D42B2B;
+  color: white;
+  transform: scale(1.05);
+}
+
+
 /* Steam animations */
 .steam {
   transform-origin: bottom center;
@@ -236,4 +258,41 @@
   font-size: 1.1rem;
   text-align: right;
    overflow: hidden;
+}
+
+.cart-drawer__actions {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.cart-drawer__checkout {
+  background: #F28C38;
+  color: white;
+  border: none;
+  padding: 0.9rem;
+  border-radius: 50px;
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+  width: 100%;
+}
+
+.cart-drawer__checkout:hover:not(:disabled) {
+  background: #D42B2B;
+  transform: scale(1.02);
+}
+
+.cart-drawer__checkout:disabled {
+  background: rgba(255,255,255,0.2);
+  cursor: not-allowed;
+}
+
+.cart-drawer__hint {
+  font-size: 0.8rem;
+  color: rgba(255,255,255,0.5);
+  text-align: center;
+  margin: 0;
 }

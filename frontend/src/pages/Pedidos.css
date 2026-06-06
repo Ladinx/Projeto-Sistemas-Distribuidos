@@ -227,3 +227,48 @@
     text-align: center;
   }
 }
+.pedido-card__actions {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.pedido-card__btn-avancar {
+  background: #F28C38;
+  color: white;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 50px;
+  font-family: 'Fredoka One', cursive;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.pedido-card__btn-avancar:hover:not(:disabled) {
+  background: #7DC142;
+  transform: scale(1.03);
+}
+
+.pedido-card__btn-cancelar {
+  background: none;
+  color: #D42B2B;
+  border: 2px solid #D42B2B;
+  padding: 0.6rem 1.2rem;
+  border-radius: 50px;
+  font-family: 'Fredoka One', cursive;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.pedido-card__btn-cancelar:hover:not(:disabled) {
+  background: #D42B2B;
+  color: white;
+}
+
+.pedido-card__btn-avancar:disabled,
+.pedido-card__btn-cancelar:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

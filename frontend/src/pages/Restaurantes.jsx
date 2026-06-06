@@ -3,7 +3,7 @@ import Navbar from '../components/Navbar'
 import { api } from '../api'
 import './Restaurantes.css'
 
-export default function Restaurantes({ onNavigate }) {
+export default function Restaurantes({ onNavigate, onAdicionar, cart, user, onLogout, onLogin, onRemover, onCheckout }) {
   const [restaurantes, setRestaurantes] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -27,7 +27,15 @@ export default function Restaurantes({ onNavigate }) {
 
   return (
     <div className="restaurantes">
-      <Navbar onNavigate={onNavigate} />
+      <Navbar
+        onNavigate={onNavigate}
+        carrinho={cart}
+        onRemover={onRemover}
+        onCheckout={onCheckout}
+        user={user}
+        onLogout={onLogout}
+        onLogin={onLogin}
+      />
 
       <div className="ingredients-stripe">
         <div className="stripe" style={{ background: '#F5E642' }} />
@@ -49,24 +57,24 @@ export default function Restaurantes({ onNavigate }) {
                 <div key={restaurante.id} className="restaurante-card">
                   <div className="restaurante-card__header">
                     <h2 className="restaurante-card__name">{restaurante.nome}</h2>
-                    <span className="restaurante-card__status">
-                      {restaurante.ativo ? '🟢 Aberto' : '🔴 Fechado'}
-                    </span>
                   </div>
 
                   <div className="restaurante-card__info">
+                    <p className="restaurante-card__descricao">
+                      {restaurante.descricao || 'Descrição não disponível.'}
+                    </p>
                     <p className="restaurante-card__endereco">
-                      <strong>Endereço:</strong> {restaurante.endereco}
+                      <strong>Endereço:</strong> {restaurante.endereco || 'N/A'}
                     </p>
-                    <p className="restaurante-card__telefone">
-                      <strong>Telefone:</strong> {restaurante.telefone}
-                    </p>
-                    <p className="restaurante-card__horario">
-                      <strong>Horário:</strong> {restaurante.horario_abertura} - {restaurante.horario_fechamento}
+                    <p className="restaurante-card__categoria">
+                      <strong>Categoria:</strong> {restaurante.categoria || 'Geral'}
                     </p>
                   </div>
 
-                  <button className="restaurante-card__button">
+                  <button
+                    className="restaurante-card__button"
+                    onClick={() => onNavigate('restaurante', restaurante.id)}
+                  >
                     Ver Cardápio
                   </button>
                 </div>

@@ -148,3 +148,110 @@
     gap: 1.5rem;
   }
 }
+
+/* Detalhe do restaurante */
+.restaurante-detail {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.restaurante-detail h1 {
+  font-family: 'Fredoka One', cursive;
+  font-size: 3rem;
+  color: #D42B2B;
+  margin: 0 0 0.5rem;
+}
+
+.restaurante-detail p {
+  font-size: 1rem;
+  color: #6b6375;
+  margin: 0.25rem 0;
+}
+
+.restaurante-detail strong {
+  color: #2C1810;
+}
+
+/* Botão voltar */
+.restaurante-back {
+  display: inline-block;
+  margin-bottom: 2rem;
+  background: none;
+  border: 2px solid #F28C38;
+  color: #F28C38;
+  font-family: 'Fredoka One', cursive;
+  font-size: 1rem;
+  padding: 0.5rem 1.25rem;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.restaurante-back:hover {
+  background: #F28C38;
+  color: white;
+}
+
+/* Formulário de novo produto */
+.produto-form {
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  max-width: 520px;
+  margin: 0 auto 3rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.produto-form h3 {
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.5rem;
+  color: #2C1810;
+  margin: 0;
+}
+
+.produto-form input {
+  padding: 0.75rem 1rem;
+  border: 2px solid #F0E8D8;
+  border-radius: 50px;
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 1rem;
+  color: #2C1810;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.produto-form input:focus {
+  border-color: #F28C38;
+}
+
+.produto-form button[type="submit"] {
+  background: #F28C38;
+  color: white;
+  border: none;
+  padding: 0.9rem;
+  border-radius: 50px;
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.produto-form button[type="submit"]:hover {
+  background: #D42B2B;
+  transform: scale(1.02);
+}
+
+.produto-form button[type="submit"]:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.produto-form__error {
+  color: #D42B2B;
+  font-size: 0.9rem;
+  margin: 0;
+}
