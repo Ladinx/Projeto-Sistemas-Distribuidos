@@ -17,8 +17,9 @@ router.post('/register', async (req, res) => {
     return res.status(400).json({ error: "O tipo de usuário deve ser 'cliente' ou 'restaurante'" });
   }
 
-  const client = await db.pool.connect();
+  let client;
   try {
+    client = await db.pool.connect();
     const userCheck = await client.query('SELECT id FROM usuarios WHERE email = $1', [email]);
     if (userCheck.rows.length > 0) {
       return res.status(400).json({ error: 'E-mail já cadastrado' });
@@ -53,7 +54,7 @@ router.post('/register', async (req, res) => {
     console.error('Erro no registro:', error);
     return res.status(500).json({ error: 'Erro interno no servidor' });
   } finally {
-    client.release();
+    if (client) client.release();
   }
 });
 
@@ -83,14 +84,26 @@ router.post('/login', async (req, res) => {
       { expiresIn: '24h' }
     );
 
+    const usuarioResponse = {
+      id: usuario.id,
+      nome: usuario.nome,
+      email: usuario.email,
+      tipo: usuario.tipo
+    };
+
+    if (usuario.tipo === 'restaurante') {
+      const restResult = await db.query(
+        'SELECT descricao, categoria, endereco, foto_url FROM restaurantes WHERE usuario_id = $1',
+        [usuario.id]
+      );
+      if (restResult.rows.length > 0) {
+        Object.assign(usuarioResponse, restResult.rows[0]);
+      }
+    }
+
     return res.json({
       token,
-      usuario: {
-        id: usuario.id,
-        nome: usuario.nome,
-        email: usuario.email,
-        tipo: usuario.tipo
-      }
+      usuario: usuarioResponse
     });
   } catch (error) {
     console.error('Erro no login:', error);
@@ -110,7 +123,19 @@ router.get('/me', authenticateToken, async (req, res) => {
       return res.status(404).json({ error: 'Usuário não encontrado.' });
     }
 
-    return res.json(result.rows[0]);
+    const userData = result.rows[0];
+
+    if (userData.tipo === 'restaurante') {
+      const restResult = await db.query(
+        'SELECT descricao, categoria, endereco, foto_url FROM restaurantes WHERE usuario_id = $1',
+        [userData.id]
+      );
+      if (restResult.rows.length > 0) {
+        Object.assign(userData, restResult.rows[0]);
+      }
+    }
+
+    return res.json(userData);
   } catch (error) {
     console.error('Erro ao buscar usuário autenticado:', error);
     return res.status(500).json({ error: 'Erro interno no servidor' });

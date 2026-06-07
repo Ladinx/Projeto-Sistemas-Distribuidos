@@ -79,15 +79,19 @@ router.post('/:id/produtos', authenticateToken, permitOnly(['restaurante']), asy
   const { id } = req.params;
   const { nome, descricao, preco } = req.body;
 
-  if (parseInt(id) !== req.user.id) {
-    return res.status(403).json({ error: 'Acesso negado. Não é permitido adicionar produtos para outro restaurante.' });
-  }
-
   if (!nome || preco === undefined) {
     return res.status(400).json({ error: 'Nome e Preço são obrigatórios.' });
   }
 
   try {
+    const restCheck = await db.query(
+      'SELECT id FROM restaurantes WHERE id = $1 AND usuario_id = $2',
+      [id, req.user.id]
+    );
+    if (restCheck.rows.length === 0) {
+      return res.status(403).json({ error: 'Acesso negado. Não é permitido adicionar produtos para outro restaurante.' });
+    }
+
     const queryText = `
       INSERT INTO produtos (restaurante_id, nome, descricao, preco)
       VALUES ($1, $2, $3, $4)

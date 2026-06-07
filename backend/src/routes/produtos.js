@@ -12,12 +12,18 @@ router.put('/:id', authenticateToken, permitOnly(['restaurante']), async (req, r
   }
 
   try {
-    const prodCheck = await db.query('SELECT restaurante_id FROM produtos WHERE id = $1', [id]);
+    const prodCheck = await db.query(
+      `SELECT p.id, r.usuario_id
+       FROM produtos p
+       JOIN restaurantes r ON p.restaurante_id = r.id
+       WHERE p.id = $1`,
+      [id]
+    );
     if (prodCheck.rows.length === 0) {
       return res.status(404).json({ error: 'Produto não encontrado.' });
     }
 
-    if (prodCheck.rows[0].restaurante_id !== req.user.id) {
+    if (prodCheck.rows[0].usuario_id !== req.user.id) {
       return res.status(403).json({ error: 'Acesso negado. Este produto pertence a outro restaurante.' });
     }
 
@@ -42,12 +48,18 @@ router.delete('/:id', authenticateToken, permitOnly(['restaurante']), async (req
   const { id } = req.params;
 
   try {
-    const prodCheck = await db.query('SELECT restaurante_id FROM produtos WHERE id = $1', [id]);
+    const prodCheck = await db.query(
+      `SELECT p.id, r.usuario_id
+       FROM produtos p
+       JOIN restaurantes r ON p.restaurante_id = r.id
+       WHERE p.id = $1`,
+      [id]
+    );
     if (prodCheck.rows.length === 0) {
       return res.status(404).json({ error: 'Produto não encontrado.' });
     }
 
-    if (prodCheck.rows[0].restaurante_id !== req.user.id) {
+    if (prodCheck.rows[0].usuario_id !== req.user.id) {
       return res.status(403).json({ error: 'Acesso negado. Este produto pertence a outro restaurante.' });
     }
 
