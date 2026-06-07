@@ -57,6 +57,7 @@ export const api = {
   getPedidos: () => request('/pedidos'),
   getPedido: (id) => request(`/pedidos/${id}`),
   updatePedidoStatus: (id, body) => request(`/pedidos/${id}/status`, { method: 'PUT', body: JSON.stringify(body) }),
+  getMaisPedidos: () => request('/pedidos/mais-pedidos'),
 
   // Pagamentos
   createPagamento: (pedidoId, body) => request(`/pagamentos/${pedidoId}`, { method: 'POST', body: JSON.stringify(body) }),

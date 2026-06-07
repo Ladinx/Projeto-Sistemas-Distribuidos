@@ -1,15 +1,22 @@
+import { useState, useEffect } from 'react'
 import Navbar from '../components/Navbar'
 import CardProduto from '../components/CardProduto'
+import { api } from '../api'
 import './Home.css'
 
-const PEDIDOS_FREQUENTES = [
-  { id: 1, nome: 'Smash Clássico', preco: 28 },
-  { id: 2, nome: 'Double Bacon', preco: 34 },
-  { id: 3, nome: 'BBQ Cheddar', preco: 31 },
-  { id: 4, nome: 'Crispy Frango', preco: 29 },
-]
-
 export default function Home({ onNavigate, onAdicionar, cart, user, onLogout, onLogin, onRemover, onCheckout }) {
+  const [maisPedidos, setMaisPedidos] = useState([])
+
+  useEffect(() => {
+    if (user && user.tipo === 'cliente') {
+      api.getMaisPedidos()
+        .then(setMaisPedidos)
+        .catch(() => setMaisPedidos([]))
+    } else {
+      setMaisPedidos([])
+    }
+  }, [user])
+
   return (
     <div className="home">
       <Navbar
@@ -55,24 +62,29 @@ export default function Home({ onNavigate, onAdicionar, cart, user, onLogout, on
           <div className="orange-section__featured">imagem destaque 2</div>
         </div>
 
-        <div className="orange-section__frequent">
-          <h2 className="frequent__title">Pedidos com frequência:</h2>
-          <div className="frequent__grid">
-            {PEDIDOS_FREQUENTES.map((produto) => (
-              <CardProduto
-                key={produto.id}
-                nome={produto.nome}
-                preco={produto.preco}
-                imagem={produto.imagem}
-                onAdicionar={() => onAdicionar && onAdicionar({
-                  nome: produto.nome,
-                  preco: produto.preco,
-                  quantidade: 1,
-                })}
-              />
-            ))}
+        {maisPedidos.length > 0 && (
+          <div className="orange-section__frequent">
+            <h2 className="frequent__title">Pedidos com frequencia:</h2>
+            <div className="frequent__grid">
+              {maisPedidos.map((item) => (
+                <CardProduto
+                  key={item.produto_id}
+                  nome={item.produto_nome}
+                  preco={parseFloat(item.preco)}
+                  produto_id={item.produto_id}
+                  restaurante_id={item.restaurante_id}
+                  onAdicionar={() => onAdicionar && onAdicionar({
+                    produto_id: item.produto_id,
+                    nome: item.produto_nome,
+                    preco: parseFloat(item.preco),
+                    restaurante_id: item.restaurante_id,
+                    quantidade: 1,
+                  })}
+                />
+              ))}
+            </div>
           </div>
-        </div>
+        )}
       </section>
     </div>
   )
