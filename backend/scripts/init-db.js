@@ -10,12 +10,12 @@ async function initDb() {
     const sqlPath = path.join(__dirname, '..', 'sql', 'schema.sql');
     const sql = fs.readFileSync(sqlPath, 'utf8');
 
-    console.log('⚠️  ATENÇÃO: Isso vai DROPAR todas as tabelas existentes e recriá-las.');
+    console.log('ATENCAO: Isso vai DROPAR todas as tabelas existentes e recri-las.');
     console.log('Conectando ao banco...');
     await pool.query(sql);
-    console.log('✅ Schema aplicado com sucesso!');
+    console.log('Schema aplicado com sucesso!');
   } catch (error) {
-    console.error('❌ Erro ao aplicar schema:', error.message);
+    console.error('Erro ao aplicar schema:', error.message);
     process.exit(1);
   } finally {
     await pool.end();
