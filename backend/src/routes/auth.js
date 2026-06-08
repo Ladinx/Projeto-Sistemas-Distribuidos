@@ -88,7 +88,8 @@ router.post('/login', async (req, res) => {
       id: usuario.id,
       nome: usuario.nome,
       email: usuario.email,
-      tipo: usuario.tipo
+      tipo: usuario.tipo,
+      endereco: usuario.endereco || null
     };
 
     if (usuario.tipo === 'restaurante') {
@@ -115,7 +116,7 @@ router.post('/login', async (req, res) => {
 router.get('/me', authenticateToken, async (req, res) => {
   try {
     const result = await db.query(
-      'SELECT id, nome, email, tipo, foto_url, criado_em FROM usuarios WHERE id = $1',
+      'SELECT id, nome, email, tipo, foto_url, endereco, criado_em FROM usuarios WHERE id = $1',
       [req.user.id]
     );
 
@@ -160,8 +161,8 @@ router.put('/profile', authenticateToken, async (req, res) => {
     await client.query('BEGIN');
 
     await client.query(
-      'UPDATE usuarios SET nome = $1, foto_url = $2 WHERE id = $3',
-      [nome, foto_url || null, userId]
+      'UPDATE usuarios SET nome = $1, foto_url = $2, endereco = $3 WHERE id = $4',
+      [nome, foto_url || null, endereco || null, userId]
     );
 
     if (tipo === 'restaurante') {
@@ -176,7 +177,7 @@ router.put('/profile', authenticateToken, async (req, res) => {
     await client.query('COMMIT');
 
     const result = await db.query(
-      'SELECT id, nome, email, tipo, foto_url, criado_em FROM usuarios WHERE id = $1',
+      'SELECT id, nome, email, tipo, foto_url, endereco, criado_em FROM usuarios WHERE id = $1',
       [userId]
     );
     

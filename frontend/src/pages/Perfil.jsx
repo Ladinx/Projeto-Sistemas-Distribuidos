@@ -137,29 +137,28 @@ export default function Perfil({ onNavigate, user, onLogin, onLogout, cart = [],
             </div>
 
             {isRestaurante && (
-              <>
-                <div className="form-group">
-                  <label className="form-label">Descrição</label>
-                  <input
-                    type="text"
-                    name="descricao"
-                    value={formData.descricao}
-                    onChange={handleChange}
-                    className="form-input"
-                  />
-                </div>
-                <div className="form-group">
-                  <label className="form-label">Endereço</label>
-                  <input
-                    type="text"
-                    name="endereco"
-                    value={formData.endereco}
-                    onChange={handleChange}
-                    className="form-input"
-                  />
-                </div>
-              </>
+              <div className="form-group">
+                <label className="form-label">Descrição</label>
+                <input
+                  type="text"
+                  name="descricao"
+                  value={formData.descricao}
+                  onChange={handleChange}
+                  className="form-input"
+                />
+              </div>
             )}
+
+            <div className="form-group">
+              <label className="form-label">Endereço de entrega</label>
+              <input
+                type="text"
+                name="endereco"
+                value={formData.endereco}
+                onChange={handleChange}
+                className="form-input"
+              />
+            </div>
 
             {error && <div className="perfil__message perfil__error">{error}</div>}
             {success && <div className="perfil__message perfil__success">{success}</div>}
