@@ -76,7 +76,7 @@ CREATE TABLE pedidos(
   id  SERIAL PRIMARY KEY,
   cliente_id INTEGER NOT NULL REFERENCES usuarios (id) ON DELETE RESTRICT,
   restaurante_id INTEGER NOT NULL REFERENCES restaurantes (id) ON DELETE RESTRICT,
-  status status_pedido NOT NULL DEFAULT 'pendente',
+  status status_pedido NOT NULL DEFAULT 'entregue',
   total NUMERIC(10, 2) NOT NULL CHECK (total >= 0),
   endereco_entrega VARCHAR(255) NOT NULL,
   criado_em TIMESTAMPTZ NOT NULL DEFAULT NOW()

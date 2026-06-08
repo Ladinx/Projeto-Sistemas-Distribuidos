@@ -60,7 +60,7 @@ router.post('/', authenticateToken, permitOnly(['cliente']), async (req, res) =>
 
     const orderInsertQuery = `
       INSERT INTO pedidos (cliente_id, restaurante_id, status, total, endereco_entrega)
-      VALUES ($1, $2, 'pendente', $3, $4)
+      VALUES ($1, $2, 'entregue', $3, $4)
       RETURNING id, status, total, endereco_entrega, criado_em
     `;
     const orderResult = await client.query(orderInsertQuery, [cliente_id, restaurante_id, total, endereco_entrega]);
