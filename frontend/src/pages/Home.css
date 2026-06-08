@@ -167,6 +167,25 @@
   background: #F0E8D8;
 }
 
+.destaque-card__add {
+  margin-top: 0.5rem;
+  width: 100%;
+  padding: 0.5rem;
+  border: none;
+  border-radius: 50px;
+  background: #F28C38;
+  color: white;
+  font-family: 'Fredoka One', cursive;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+}
+
+.destaque-card__add:hover {
+  background: #D42B2B;
+  transform: scale(1.02);
+}
+
 .orange-section__frequent {
   flex: 1;
   display: flex;

@@ -12,7 +12,7 @@ router.get('/destaque', async (req, res) => {
       JOIN restaurantes r ON p.restaurante_id = r.id
       WHERE p.foto_url IS NOT NULL AND p.foto_url != '' AND p.ativo = true
       ORDER BY RANDOM()
-      LIMIT 2
+      LIMIT 4
     `);
     return res.json(result.rows);
   } catch (error) {

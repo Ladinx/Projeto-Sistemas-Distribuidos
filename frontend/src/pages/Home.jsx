@@ -77,10 +77,25 @@ export default function Home({ onNavigate, onAdicionar, cart, user, onLogout, on
                   )}
                   <span>{item.restaurante_nome}</span>
                 </div>
+                <button
+                  className="destaque-card__add"
+                  onClick={() => onAdicionar && onAdicionar({
+                    produto_id: item.id,
+                    nome: item.produto_nome,
+                    preco: parseFloat(item.preco),
+                    imagem: item.produto_foto,
+                    restaurante_id: item.restaurante_id,
+                    quantidade: 1,
+                  })}
+                >
+                  Adicionar ao carrinho
+                </button>
               </div>
             </div>
           )) : (
             <>
+              <div className="orange-section__featured-placeholder" />
+              <div className="orange-section__featured-placeholder" />
               <div className="orange-section__featured-placeholder" />
               <div className="orange-section__featured-placeholder" />
             </>
