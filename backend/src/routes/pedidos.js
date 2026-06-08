@@ -132,7 +132,8 @@ router.get('/mais-pedidos', authenticateToken, async (req, res) => {
   try {
     const queryText = `
       SELECT pi.produto_id, p.nome AS produto_nome, p.preco,
-             p.restaurante_id, r.nome AS restaurante_nome,
+             p.foto_url AS produto_foto,
+             p.restaurante_id, r.nome AS restaurante_nome, r.foto_url AS restaurante_foto,
              COUNT(*) AS total_vezes
       FROM pedido_itens pi
       JOIN pedidos pd ON pi.pedido_id = pd.id

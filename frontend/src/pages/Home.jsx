@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import Navbar from '../components/Navbar'
-import CardProduto from '../components/CardProduto'
 import { api } from '../api'
 import './Home.css'
 
@@ -107,20 +106,32 @@ export default function Home({ onNavigate, onAdicionar, cart, user, onLogout, on
             <h2 className="frequent__title">Pedidos com frequencia:</h2>
             <div className="frequent__grid">
               {maisPedidos.map((item) => (
-                <CardProduto
-                  key={item.produto_id}
-                  nome={item.produto_nome}
-                  preco={parseFloat(item.preco)}
-                  produto_id={item.produto_id}
-                  restaurante_id={item.restaurante_id}
-                  onAdicionar={() => onAdicionar && onAdicionar({
-                    produto_id: item.produto_id,
-                    nome: item.produto_nome,
-                    preco: parseFloat(item.preco),
-                    restaurante_id: item.restaurante_id,
-                    quantidade: 1,
-                  })}
-                />
+                <div key={item.produto_id} className="destaque-card">
+                  <div className="destaque-card__img" style={{ backgroundImage: `url(${item.produto_foto})` }} />
+                  <div className="destaque-card__body">
+                    <h3 className="destaque-card__nome">{item.produto_nome}</h3>
+                    <span className="destaque-card__preco">R$ {parseFloat(item.preco).toFixed(2)}</span>
+                    <div className="destaque-card__restaurante">
+                      {item.restaurante_foto && (
+                        <img src={item.restaurante_foto} alt="" className="destaque-card__restaurante-avatar" />
+                      )}
+                      <span>{item.restaurante_nome}</span>
+                    </div>
+                    <button
+                      className="destaque-card__add"
+                      onClick={() => onAdicionar && onAdicionar({
+                        produto_id: item.produto_id,
+                        nome: item.produto_nome,
+                        preco: parseFloat(item.preco),
+                        imagem: item.produto_foto,
+                        restaurante_id: item.restaurante_id,
+                        quantidade: 1,
+                      })}
+                    >
+                      Adicionar ao carrinho
+                    </button>
+                  </div>
+                </div>
               ))}
             </div>
           </div>
