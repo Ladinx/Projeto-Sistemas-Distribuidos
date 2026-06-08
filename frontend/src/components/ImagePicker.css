@@ -1,0 +1,181 @@
+@import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Baloo+2:wght@400;600;700&display=swap');
+
+.ipicker-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ipicker-modal {
+  background: #fff;
+  border-radius: 20px;
+  padding: 2rem;
+  width: 90%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  font-family: 'Baloo 2', sans-serif;
+}
+
+.ipicker-title {
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.5rem;
+  color: #2C1810;
+  margin: 0;
+}
+
+.ipicker-preview {
+  width: 180px;
+  height: 180px;
+  border-radius: 12px;
+  border: 3px dashed #F0E8D8;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: border-color 0.2s;
+  background: #FAFAFA;
+}
+
+.ipicker-preview:hover {
+  border-color: #F28C38;
+}
+
+.ipicker-preview__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.ipicker-preview__placeholder {
+  color: #bbb;
+  font-size: 0.9rem;
+  text-align: center;
+  padding: 1rem;
+}
+
+.ipicker-upload-btn {
+  background: #7DC142;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 50px;
+  font-family: 'Fredoka One', cursive;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background 0.2s;
+  width: 100%;
+}
+
+.ipicker-upload-btn:hover {
+  background: #6BA838;
+}
+
+.ipicker-upload-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.ipicker-divider {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: #bbb;
+  font-size: 0.85rem;
+}
+
+.ipicker-divider::before,
+.ipicker-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: #F0E8D8;
+}
+
+.ipicker-url-label {
+  align-self: flex-start;
+  font-weight: 700;
+  color: #2C1810;
+  font-size: 0.9rem;
+}
+
+.ipicker-url-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 2px solid #F0E8D8;
+  border-radius: 50px;
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 1rem;
+  color: #2C1810;
+  outline: none;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+}
+
+.ipicker-url-input:focus {
+  border-color: #F28C38;
+}
+
+.ipicker-error {
+  color: #D42B2B;
+  font-size: 0.9rem;
+  margin: 0;
+  align-self: flex-start;
+}
+
+.ipicker-actions {
+  display: flex;
+  gap: 1rem;
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+.ipicker-cancel {
+  flex: 1;
+  padding: 0.75rem;
+  border: 2px solid #F0E8D8;
+  border-radius: 50px;
+  background: white;
+  font-family: 'Fredoka One', cursive;
+  font-size: 1rem;
+  color: #6b6375;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.ipicker-cancel:hover {
+  border-color: #D42B2B;
+  color: #D42B2B;
+}
+
+.ipicker-confirm {
+  flex: 1;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 50px;
+  background: #F28C38;
+  font-family: 'Fredoka One', cursive;
+  font-size: 1rem;
+  color: white;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.ipicker-confirm:hover {
+  background: #D42B2B;
+  transform: scale(1.02);
+}
+
+.ipicker-confirm:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  transform: none;
+}

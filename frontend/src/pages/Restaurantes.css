@@ -312,3 +312,47 @@
   font-weight: bold;
   cursor: pointer;
 }
+
+.produto-form__image-row {
+  display: flex;
+  gap: 8px;
+}
+
+.produto-form__image-btn {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border: 2px solid #F0E8D8;
+  border-radius: 50px;
+  background: white;
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 0.95rem;
+  color: #6b6375;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.produto-form__image-btn:hover {
+  border-color: #F28C38;
+  color: #F28C38;
+}
+
+.produto-form__image-btn--remove {
+  flex: 0;
+  min-width: fit-content;
+  padding: 0.75rem 1.25rem;
+  border-color: #f0c8c8;
+  color: #D42B2B;
+}
+
+.produto-form__image-btn--remove:hover {
+  border-color: #D42B2B;
+  background: #fff0f0;
+}
+
+.produto-form__thumb {
+  width: 80px;
+  height: 80px;
+  border-radius: 8px;
+  object-fit: cover;
+  align-self: flex-start;
+}

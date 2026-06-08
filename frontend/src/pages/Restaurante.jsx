@@ -1,5 +1,6 @@
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState } from 'react'
 import Navbar from '../components/Navbar'
+import ImagePicker from '../components/ImagePicker'
 import { api } from '../api'
 import './Restaurantes.css'
 
@@ -13,10 +14,10 @@ export default function Restaurante({ restaurantId, onNavigate, onAdicionar, car
   const [form, setForm] = useState({ nome: '', descricao: '', preco: '', foto_url: '' })
   const [formError, setFormError] = useState(null)
   const [formLoading, setFormLoading] = useState(false)
-  const fileInputRef = useRef(null)
   const [editingId, setEditingId] = useState(null)
   const [editForm, setEditForm] = useState({ nome: '', descricao: '', preco: '', foto_url: '' })
   const [editLoading, setEditLoading] = useState(false)
+  const [pickerTarget, setPickerTarget] = useState(null) // 'add' | 'edit' | null
 
   const isDono = user && restaurante && user.id === restaurante.usuario_id
 
@@ -170,38 +171,27 @@ export default function Restaurante({ restaurantId, onNavigate, onAdicionar, car
                   value={form.preco}
                   onChange={(e) => setForm({ ...form, preco: e.target.value })}
                 />
-                <input
-                  type="text"
-                  placeholder="URL da Imagem (opcional)"
-                  value={form.foto_url}
-                  onChange={(e) => setForm({ ...form, foto_url: e.target.value })}
-                />
-                <input 
-                  type="file" 
-                  ref={fileInputRef}
-                  style={{ display: 'none' }}
-                  accept="image/*"
-                  onChange={async (e) => {
-                    const file = e.target.files[0];
-                    if (!file) return;
-                    try {
-                      setFormLoading(true);
-                      const data = await api.uploadImage(file);
-                      if (data.url) setForm({ ...form, foto_url: data.url });
-                    } catch (err) {
-                      setFormError('Erro ao fazer upload da imagem.');
-                    } finally {
-                      setFormLoading(false);
-                    }
-                  }}
-                />
-                <button 
-                  type="button" 
-                  onClick={() => fileInputRef.current.click()}
-                  style={{ background: '#eee', color: '#333', marginBottom: '8px' }}
-                >
-                  Fazer upload de imagem
-                </button>
+                <div className="produto-form__image-row">
+                  <button
+                    type="button"
+                    className="produto-form__image-btn"
+                    onClick={() => setPickerTarget('add')}
+                  >
+                    {form.foto_url ? 'Alterar imagem' : 'Adicionar imagem'}
+                  </button>
+                  {form.foto_url && (
+                    <button
+                      type="button"
+                      className="produto-form__image-btn produto-form__image-btn--remove"
+                      onClick={() => setForm({ ...form, foto_url: '' })}
+                    >
+                      Remover
+                    </button>
+                  )}
+                </div>
+                {form.foto_url && (
+                  <img src={form.foto_url} alt="" className="produto-form__thumb" />
+                )}
                 <button type="submit" disabled={formLoading}>
                   {formLoading ? 'Adicionando...' : 'Adicionar produto'}
                 </button>
@@ -216,7 +206,27 @@ export default function Restaurante({ restaurantId, onNavigate, onAdicionar, car
                     <input type="text" placeholder="Nome do produto *" value={editForm.nome} onChange={(e) => setEditForm({...editForm, nome: e.target.value})} />
                     <input type="text" placeholder="Descrição" value={editForm.descricao} onChange={(e) => setEditForm({...editForm, descricao: e.target.value})} />
                     <input type="number" placeholder="Preço *" min="0" step="0.01" value={editForm.preco} onChange={(e) => setEditForm({...editForm, preco: e.target.value})} />
-                    <input type="text" placeholder="URL da Imagem (opcional)" value={editForm.foto_url} onChange={(e) => setEditForm({...editForm, foto_url: e.target.value})} />
+                    <div className="produto-form__image-row">
+                      <button
+                        type="button"
+                        className="produto-form__image-btn"
+                        onClick={() => setPickerTarget('edit')}
+                      >
+                        {editForm.foto_url ? 'Alterar imagem' : 'Adicionar imagem'}
+                      </button>
+                      {editForm.foto_url && (
+                        <button
+                          type="button"
+                          className="produto-form__image-btn produto-form__image-btn--remove"
+                          onClick={() => setEditForm({...editForm, foto_url: ''})}
+                        >
+                          Remover
+                        </button>
+                      )}
+                    </div>
+                    {editForm.foto_url && (
+                      <img src={editForm.foto_url} alt="" className="produto-form__thumb" />
+                    )}
                     <div style={{ display: 'flex', gap: '8px' }}>
                       <button type="submit" disabled={editLoading} style={{ flex: 1 }}>
                         {editLoading ? 'Salvando...' : 'Salvar'}
@@ -283,6 +293,20 @@ export default function Restaurante({ restaurantId, onNavigate, onAdicionar, car
             </div>
           </>
         )}
+
+        <ImagePicker
+          isOpen={pickerTarget !== null}
+          currentUrl={pickerTarget === 'add' ? form.foto_url : editForm.foto_url}
+          onConfirm={(url) => {
+            if (pickerTarget === 'add') {
+              setForm((prev) => ({ ...prev, foto_url: url }))
+            } else {
+              setEditForm((prev) => ({ ...prev, foto_url: url }))
+            }
+            setPickerTarget(null)
+          }}
+          onCancel={() => setPickerTarget(null)}
+        />
       </section>
     </div>
   )

@@ -1,15 +1,14 @@
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import Navbar from '../components/Navbar';
+import ImagePicker from '../components/ImagePicker';
 import { api } from '../api';
-import './Perfil.css'; // Vamos criar este arquivo depois
+import './Perfil.css';
 
 export default function Perfil({ onNavigate, user, onLogin, onLogout, cart = [], onRemover, onCheckout, setUser }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
-  const [uploading, setUploading] = useState(false);
-  
-  const fileInputRef = useRef(null);
+  const [showPicker, setShowPicker] = useState(false);
 
   const [formData, setFormData] = useState({
     nome: user?.nome || '',
@@ -43,32 +42,6 @@ export default function Perfil({ onNavigate, user, onLogin, onLogout, cart = [],
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleFileChange = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    if (!file.type.startsWith('image/')) {
-      setError('Por favor, selecione uma imagem válida.');
-      return;
-    }
-
-    try {
-      setUploading(true);
-      setError(null);
-      const data = await api.uploadImage(file);
-      
-      if (data.url) {
-        setFormData(prev => ({ ...prev, foto_url: data.url }));
-        setSuccess('Imagem upada com sucesso! Lembre-se de salvar o perfil.');
-      }
-    } catch (err) {
-      setError('Erro ao fazer upload da imagem.');
-      console.error(err);
-    } finally {
-      setUploading(false);
-    }
   };
 
   const handleSubmit = async (e) => {
@@ -114,42 +87,31 @@ export default function Perfil({ onNavigate, user, onLogin, onLogout, cart = [],
           <h1 className="perfil__title">Meu Perfil</h1>
 
           <div className="perfil__photo-section">
-            <div 
-              className="perfil__photo-preview"
-              style={{ backgroundImage: formData.foto_url ? `url(${formData.foto_url})` : 'none' }}
+            <div
+              className="perfil__photo-picker"
+              onClick={() => setShowPicker(true)}
             >
-              {!formData.foto_url && <span>Sem foto</span>}
-            </div>
-            
-            <div className="perfil__photo-actions">
-              <input 
-                type="file" 
-                ref={fileInputRef} 
-                onChange={handleFileChange} 
-                accept="image/*"
-                style={{ display: 'none' }} 
-              />
-              <button 
-                type="button" 
-                className="perfil__upload-btn"
-                onClick={() => fileInputRef.current.click()}
-                disabled={uploading}
+              <div
+                className="perfil__photo-preview"
+                style={{ backgroundImage: formData.foto_url ? `url(${formData.foto_url})` : 'none' }}
               >
-                {uploading ? 'Enviando...' : 'Alterar Foto'}
-              </button>
-              
-              <div className="perfil__url-input">
-                <label>Ou insira a URL da imagem:</label>
-                <input 
-                  type="text" 
-                  name="foto_url" 
-                  value={formData.foto_url} 
-                  onChange={handleChange}
-                  placeholder="https://..."
-                />
+                {!formData.foto_url && <span>Sem foto</span>}
               </div>
+              <button type="button" className="perfil__photo-btn">
+                Alterar foto
+              </button>
             </div>
           </div>
+
+          <ImagePicker
+            isOpen={showPicker}
+            currentUrl={formData.foto_url}
+            onConfirm={(url) => {
+              setFormData((prev) => ({ ...prev, foto_url: url }));
+              setShowPicker(false);
+            }}
+            onCancel={() => setShowPicker(false)}
+          />
 
           <form className="perfil__form" onSubmit={handleSubmit}>
             <div className="form-group">
@@ -204,7 +166,7 @@ export default function Perfil({ onNavigate, user, onLogin, onLogout, cart = [],
             
             <button
               type="submit"
-              disabled={loading || uploading}
+              disabled={loading}
               className="perfil__submit"
             >
               {loading ? 'Salvando...' : 'Salvar Alterações'}
