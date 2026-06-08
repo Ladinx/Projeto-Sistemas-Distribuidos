@@ -31,10 +31,10 @@ router.post('/register', async (req, res) => {
     await client.query('BEGIN');
 
     const usuarioResult = await client.query(
-      `INSERT INTO usuarios (nome, email, senha, tipo)
-       VALUES ($1, $2, $3, $4)
-       RETURNING id, nome, email, tipo`,
-      [nome, email, senhaHash, tipo]
+      `INSERT INTO usuarios (nome, email, senha, tipo, endereco)
+       VALUES ($1, $2, $3, $4, $5)
+       RETURNING id, nome, email, tipo, endereco`,
+      [nome, email, senhaHash, tipo, endereco || null]
     );
     const usuario = usuarioResult.rows[0];
 
