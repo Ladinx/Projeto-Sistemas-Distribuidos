@@ -42,12 +42,18 @@
   font-family: 'Baloo 2', sans-serif;
   font-size: 1rem;
   color: #2C1810;
+  background: #fff;
   outline: none;
   transition: border-color 0.2s;
 }
 
 .checkout-modal input:focus {
   border-color: #F28C38;
+}
+
+.checkout-modal input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 30px #fff inset;
+  -webkit-text-fill-color: #2C1810;
 }
 
 .checkout-modal__payment {
