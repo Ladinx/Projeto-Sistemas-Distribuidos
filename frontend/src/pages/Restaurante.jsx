@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import Navbar from '../components/Navbar'
 import { api } from '../api'
 import './Restaurantes.css'
@@ -10,11 +10,12 @@ export default function Restaurante({ restaurantId, onNavigate, onAdicionar, car
   const [error, setError] = useState(null)
 
   // form novo produto
-  const [form, setForm] = useState({ nome: '', descricao: '', preco: '' })
+  const [form, setForm] = useState({ nome: '', descricao: '', preco: '', foto_url: '' })
   const [formError, setFormError] = useState(null)
   const [formLoading, setFormLoading] = useState(false)
+  const fileInputRef = useRef(null)
 
-  const isDono = user && restaurante && user.id === restaurante.id
+  const isDono = user && restaurante && user.id === restaurante.usuario_id
 
   useEffect(() => {
     const fetchRestaurant = async () => {
@@ -50,9 +51,10 @@ export default function Restaurante({ restaurantId, onNavigate, onAdicionar, car
         nome: form.nome,
         descricao: form.descricao,
         preco: parseFloat(form.preco),
+        foto_url: form.foto_url
       })
       setProdutos((prev) => [novo, ...prev])
-      setForm({ nome: '', descricao: '', preco: '' })
+      setForm({ nome: '', descricao: '', preco: '', foto_url: '' })
     } catch (err) {
       setFormError('Erro ao criar produto.')
       console.error(err)
@@ -93,7 +95,6 @@ export default function Restaurante({ restaurantId, onNavigate, onAdicionar, car
             <div className="restaurante-detail">
               <h1>{restaurante.nome}</h1>
               <p>{restaurante.descricao || 'Descrição não disponível.'}</p>
-              <p><strong>Categoria:</strong> {restaurante.categoria || 'Geral'}</p>
               <p><strong>Endereço:</strong> {restaurante.endereco || 'N/A'}</p>
             </div>
 
@@ -121,6 +122,38 @@ export default function Restaurante({ restaurantId, onNavigate, onAdicionar, car
                   value={form.preco}
                   onChange={(e) => setForm({ ...form, preco: e.target.value })}
                 />
+                <input
+                  type="text"
+                  placeholder="URL da Imagem (opcional)"
+                  value={form.foto_url}
+                  onChange={(e) => setForm({ ...form, foto_url: e.target.value })}
+                />
+                <input 
+                  type="file" 
+                  ref={fileInputRef}
+                  style={{ display: 'none' }}
+                  accept="image/*"
+                  onChange={async (e) => {
+                    const file = e.target.files[0];
+                    if (!file) return;
+                    try {
+                      setFormLoading(true);
+                      const data = await api.uploadImage(file);
+                      if (data.url) setForm({ ...form, foto_url: data.url });
+                    } catch (err) {
+                      setFormError('Erro ao fazer upload da imagem.');
+                    } finally {
+                      setFormLoading(false);
+                    }
+                  }}
+                />
+                <button 
+                  type="button" 
+                  onClick={() => fileInputRef.current.click()}
+                  style={{ background: '#eee', color: '#333', marginBottom: '8px' }}
+                >
+                  Fazer upload de imagem
+                </button>
                 <button type="submit" disabled={formLoading}>
                   {formLoading ? 'Adicionando...' : 'Adicionar produto'}
                 </button>
@@ -131,6 +164,9 @@ export default function Restaurante({ restaurantId, onNavigate, onAdicionar, car
               {produtos.length > 0 ? (
                 produtos.map((produto) => (
                   <div key={produto.id} className="restaurante-card">
+                    {produto.foto_url && (
+                      <div className="restaurante-card__img" style={{ backgroundImage: `url(${produto.foto_url})` }} />
+                    )}
                     <div className="restaurante-card__header">
                       <h2 className="restaurante-card__name">{produto.nome}</h2>
                       <span className="restaurante-card__status">R$ {parseFloat(produto.preco).toFixed(2)}</span>
@@ -144,6 +180,7 @@ export default function Restaurante({ restaurantId, onNavigate, onAdicionar, car
                         produto_id: produto.id,
                         nome: produto.nome,
                         preco: parseFloat(produto.preco),
+                        imagem: produto.foto_url,
                         restaurante_id: restaurantId,
                         quantidade: 1,
                       })}

@@ -35,6 +35,7 @@ CREATE TABLE  usuarios (
   email VARCHAR(255) NOT NULL UNIQUE,
   senha TEXT NOT NULL, -- BCRYPT HASH
   tipo tipo_usuario NOT NULL,
+  foto_url TEXT,
   criado_em TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
@@ -48,7 +49,6 @@ CREATE TABLE restaurantes (
   usuario_id  INTEGER       NOT NULL UNIQUE REFERENCES usuarios (id) ON DELETE CASCADE,
   nome        VARCHAR(150)  NOT NULL,
   descricao   TEXT,
-  categoria   VARCHAR(100),
   endereco    VARCHAR(255),
   foto_url    TEXT,
   criado_em   TIMESTAMPTZ   NOT NULL DEFAULT NOW()

@@ -7,7 +7,7 @@ const { authenticateToken } = require('../middleware/auth');
 
 // p cliente inse apenas em usuario e p restaurante faz nos dois
 router.post('/register', async (req, res) => {
-  const { nome, email, senha, tipo, descricao, categoria, endereco } = req.body;
+  const { nome, email, senha, tipo, descricao, endereco } = req.body;
 
   if (!nome || !email || !senha || !tipo) {
     return res.status(400).json({ error: 'Campos obrigatórios: nome, email, senha, tipo' });
@@ -40,9 +40,9 @@ router.post('/register', async (req, res) => {
 
     if (tipo === 'restaurante') {
       await client.query(
-        `INSERT INTO restaurantes (usuario_id, nome, descricao, categoria, endereco)
-         VALUES ($1, $2, $3, $4, $5)`,
-        [usuario.id, nome, descricao || null, categoria || null, endereco || null]
+        `INSERT INTO restaurantes (usuario_id, nome, descricao, endereco)
+         VALUES ($1, $2, $3, $4)`,
+        [usuario.id, nome, descricao || null, endereco || null]
       );
     }
 
@@ -93,7 +93,7 @@ router.post('/login', async (req, res) => {
 
     if (usuario.tipo === 'restaurante') {
       const restResult = await db.query(
-        'SELECT descricao, categoria, endereco, foto_url FROM restaurantes WHERE usuario_id = $1',
+        'SELECT descricao, endereco, foto_url FROM restaurantes WHERE usuario_id = $1',
         [usuario.id]
       );
       if (restResult.rows.length > 0) {
@@ -115,7 +115,7 @@ router.post('/login', async (req, res) => {
 router.get('/me', authenticateToken, async (req, res) => {
   try {
     const result = await db.query(
-      'SELECT id, nome, email, tipo, criado_em FROM usuarios WHERE id = $1',
+      'SELECT id, nome, email, tipo, foto_url, criado_em FROM usuarios WHERE id = $1',
       [req.user.id]
     );
 
@@ -127,11 +127,14 @@ router.get('/me', authenticateToken, async (req, res) => {
 
     if (userData.tipo === 'restaurante') {
       const restResult = await db.query(
-        'SELECT descricao, categoria, endereco, foto_url FROM restaurantes WHERE usuario_id = $1',
+        'SELECT id as restaurante_id, descricao, endereco, foto_url as restaurante_foto_url FROM restaurantes WHERE usuario_id = $1',
         [userData.id]
       );
       if (restResult.rows.length > 0) {
         Object.assign(userData, restResult.rows[0]);
+        if (restResult.rows[0].restaurante_foto_url) {
+           userData.foto_url = restResult.rows[0].restaurante_foto_url;
+        }
       }
     }
 
@@ -139,6 +142,67 @@ router.get('/me', authenticateToken, async (req, res) => {
   } catch (error) {
     console.error('Erro ao buscar usuário autenticado:', error);
     return res.status(500).json({ error: 'Erro interno no servidor' });
+  }
+});
+
+router.put('/profile', authenticateToken, async (req, res) => {
+  const { nome, foto_url, descricao, endereco } = req.body;
+  const userId = req.user.id;
+  const tipo = req.user.tipo;
+
+  if (!nome) {
+    return res.status(400).json({ error: 'O nome é obrigatório.' });
+  }
+
+  let client;
+  try {
+    client = await db.pool.connect();
+    await client.query('BEGIN');
+
+    await client.query(
+      'UPDATE usuarios SET nome = $1, foto_url = $2 WHERE id = $3',
+      [nome, foto_url || null, userId]
+    );
+
+    if (tipo === 'restaurante') {
+      await client.query(
+        `UPDATE restaurantes 
+         SET nome = $1, descricao = $2, endereco = $3, foto_url = $4
+         WHERE usuario_id = $5`,
+        [nome, descricao || null, endereco || null, foto_url || null, userId]
+      );
+    }
+
+    await client.query('COMMIT');
+
+    const result = await db.query(
+      'SELECT id, nome, email, tipo, foto_url, criado_em FROM usuarios WHERE id = $1',
+      [userId]
+    );
+    
+    const userData = result.rows[0];
+
+    if (tipo === 'restaurante') {
+      const restResult = await db.query(
+        'SELECT id as restaurante_id, descricao, endereco, foto_url as restaurante_foto_url FROM restaurantes WHERE usuario_id = $1',
+        [userId]
+      );
+      if (restResult.rows.length > 0) {
+        Object.assign(userData, restResult.rows[0]);
+        if (restResult.rows[0].restaurante_foto_url) {
+           userData.foto_url = restResult.rows[0].restaurante_foto_url;
+        }
+      }
+    }
+
+    return res.json(userData);
+
+  } catch (error) {
+    if (client) await client.query('ROLLBACK');
+    console.error('Erro ao atualizar perfil:', error);
+    return res.status(500).json({ error: 'Erro interno no servidor' });
+  } finally {
+    if (client) client.release();
   }
 });
 

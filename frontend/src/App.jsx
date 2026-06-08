@@ -4,6 +4,7 @@ import Restaurantes from './pages/Restaurantes'
 import Restaurante from './pages/Restaurante'
 import Pedidos from './pages/Pedidos'
 import Auth from './pages/Auth'
+import Perfil from './pages/Perfil'
 import { api } from './api'
 
 export default function App() {
@@ -214,6 +215,18 @@ export default function App() {
           onRegister={handleRegister}
           authView={authView}
           user={user}
+        />
+      )}
+      {currentPage === 'perfil' && (
+        <Perfil
+          onNavigate={navigate}
+          user={user}
+          onLogin={() => navigate('auth', 'login')}
+          onLogout={handleLogout}
+          cart={cart}
+          onRemover={handleRemoveFromCart}
+          onCheckout={handleCheckout}
+          setUser={setUser}
         />
       )}
     </>

@@ -24,7 +24,7 @@ router.get('/:id/produtos', async (req, res) => {
   const { id } = req.params;
   try {
     const result = await db.query(
-      'SELECT id, nome, descricao, preco, ativo, criado_em FROM produtos WHERE restaurante_id = $1 ORDER BY criado_em DESC',
+      'SELECT id, nome, descricao, preco, foto_url, ativo, criado_em FROM produtos WHERE restaurante_id = $1 ORDER BY criado_em DESC',
       [id]
     );
     return res.json(result.rows);
@@ -93,11 +93,11 @@ router.post('/:id/produtos', authenticateToken, permitOnly(['restaurante']), asy
     }
 
     const queryText = `
-      INSERT INTO produtos (restaurante_id, nome, descricao, preco)
-      VALUES ($1, $2, $3, $4)
-      RETURNING id, restaurante_id, nome, descricao, preco, ativo, criado_em
+      INSERT INTO produtos (restaurante_id, nome, descricao, preco, foto_url)
+      VALUES ($1, $2, $3, $4, $5)
+      RETURNING id, restaurante_id, nome, descricao, preco, foto_url, ativo, criado_em
     `;
-    const values = [id, nome, descricao || null, preco];
+    const values = [id, nome, descricao || null, preco, req.body.foto_url || null];
     const result = await db.query(queryText, values);
 
     return res.status(201).json(result.rows[0]);
