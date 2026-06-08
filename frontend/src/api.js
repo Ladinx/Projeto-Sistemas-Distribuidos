@@ -48,6 +48,7 @@ export const api = {
   updateRestaurante: (id, body) => request(`/restaurantes/${id}`, { method: 'PUT', body: JSON.stringify(body) }),
 
   // Produtos
+  getDestaques: () => request('/produtos/destaque'),
   getProdutos: (restauranteId) => request(`/restaurantes/${restauranteId}/produtos`),
   createProduto: (restauranteId, body) => request(`/restaurantes/${restauranteId}/produtos`, { method: 'POST', body: JSON.stringify(body) }),
   updateProduto: (produtoId, body) => request(`/produtos/${produtoId}`, { method: 'PUT', body: JSON.stringify(body) }),

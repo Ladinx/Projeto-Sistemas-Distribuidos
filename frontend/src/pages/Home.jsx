@@ -6,6 +6,13 @@ import './Home.css'
 
 export default function Home({ onNavigate, onAdicionar, cart, user, onLogout, onLogin, onRemover, onCheckout }) {
   const [maisPedidos, setMaisPedidos] = useState([])
+  const [destaques, setDestaques] = useState([])
+
+  useEffect(() => {
+    api.getDestaques()
+      .then(setDestaques)
+      .catch(() => setDestaques([]))
+  }, [])
 
   useEffect(() => {
     if (user && user.tipo === 'cliente') {
@@ -58,8 +65,26 @@ export default function Home({ onNavigate, onAdicionar, cart, user, onLogout, on
 
       <section className="orange-section">
         <div className="orange-section__featured-container">
-          <div className="orange-section__featured">imagem destaque 1</div>
-          <div className="orange-section__featured">imagem destaque 2</div>
+          {destaques.length > 0 ? destaques.map((item) => (
+            <div key={item.id} className="destaque-card">
+              <div className="destaque-card__img" style={{ backgroundImage: `url(${item.produto_foto})` }} />
+              <div className="destaque-card__body">
+                <h3 className="destaque-card__nome">{item.produto_nome}</h3>
+                <span className="destaque-card__preco">R$ {parseFloat(item.preco).toFixed(2)}</span>
+                <div className="destaque-card__restaurante">
+                  {item.restaurante_foto && (
+                    <img src={item.restaurante_foto} alt="" className="destaque-card__restaurante-avatar" />
+                  )}
+                  <span>{item.restaurante_nome}</span>
+                </div>
+              </div>
+            </div>
+          )) : (
+            <>
+              <div className="orange-section__featured-placeholder" />
+              <div className="orange-section__featured-placeholder" />
+            </>
+          )}
         </div>
 
         {maisPedidos.length > 0 && (

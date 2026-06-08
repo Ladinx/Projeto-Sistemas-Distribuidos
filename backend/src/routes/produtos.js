@@ -3,6 +3,24 @@ const router = express.Router();
 const db = require('../db');
 const { authenticateToken, permitOnly } = require('../middleware/auth');
 
+router.get('/destaque', async (req, res) => {
+  try {
+    const result = await db.query(`
+      SELECT p.id, p.nome AS produto_nome, p.preco, p.foto_url AS produto_foto,
+             r.id AS restaurante_id, r.nome AS restaurante_nome, r.foto_url AS restaurante_foto
+      FROM produtos p
+      JOIN restaurantes r ON p.restaurante_id = r.id
+      WHERE p.foto_url IS NOT NULL AND p.foto_url != '' AND p.ativo = true
+      ORDER BY RANDOM()
+      LIMIT 2
+    `);
+    return res.json(result.rows);
+  } catch (error) {
+    console.error('Erro ao buscar destaques:', error);
+    return res.status(500).json({ error: 'Erro interno no servidor' });
+  }
+});
+
 router.put('/:id', authenticateToken, permitOnly(['restaurante']), async (req, res) => {
   const { id } = req.params;
   const { nome, descricao, preco, ativo, foto_url } = req.body;
