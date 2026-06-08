@@ -17,6 +17,7 @@ if (!process.env.FRONTEND_URL && process.env.NODE_ENV === 'production') {
 const allowedOrigins = [
   'http://localhost:3000',
   'http://localhost:5173',
+  'https://projeto-sistemas-distribuidos.vercel.app',
   process.env.FRONTEND_URL
 ].filter(Boolean);
 
@@ -26,7 +27,7 @@ app.use(cors({
     if (allowedOrigins.indexOf(origin) !== -1 || process.env.NODE_ENV !== 'production') {
       return callback(null, true);
     }
-    return callback(new Error('Acesso não permitido pelo CORS'), false);
+    return callback(null, false);
   },
   credentials: true
 }));
