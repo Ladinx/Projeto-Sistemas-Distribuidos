@@ -24,7 +24,7 @@ router.get('/:id', async (req, res) => {
   const { id } = req.params;
   try {
     const result = await db.query(
-      `SELECT r.id, r.nome, u.email, r.descricao, r.endereco, r.foto_url, r.criado_em
+      `SELECT r.id, r.nome, u.email, r.descricao, r.endereco, r.foto_url, r.criado_em, r.usuario_id
        FROM restaurantes r
        JOIN usuarios u ON r.usuario_id = u.id
        WHERE r.id = $1`,

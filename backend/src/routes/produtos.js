@@ -5,7 +5,7 @@ const { authenticateToken, permitOnly } = require('../middleware/auth');
 
 router.put('/:id', authenticateToken, permitOnly(['restaurante']), async (req, res) => {
   const { id } = req.params;
-  const { nome, descricao, preco, ativo } = req.body;
+  const { nome, descricao, preco, ativo, foto_url } = req.body;
 
   if (!nome || preco === undefined) {
     return res.status(400).json({ error: 'Nome e Preço são obrigatórios.' });
@@ -29,11 +29,11 @@ router.put('/:id', authenticateToken, permitOnly(['restaurante']), async (req, r
 
     const queryText = `
       UPDATE produtos
-      SET nome = $1, descricao = $2, preco = $3, ativo = $4
-      WHERE id = $5
-      RETURNING id, restaurante_id, nome, descricao, preco, ativo, criado_em
+      SET nome = $1, descricao = $2, preco = $3, ativo = $4, foto_url = $5
+      WHERE id = $6
+      RETURNING id, restaurante_id, nome, descricao, preco, foto_url, ativo, criado_em
     `;
-    const values = [nome, descricao || null, preco, ativo !== undefined ? ativo : true, id];
+    const values = [nome, descricao || null, preco, ativo !== undefined ? ativo : true, foto_url || null, id];
     const result = await db.query(queryText, values);
 
     return res.json(result.rows[0]);

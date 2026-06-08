@@ -14,6 +14,9 @@ export default function Restaurante({ restaurantId, onNavigate, onAdicionar, car
   const [formError, setFormError] = useState(null)
   const [formLoading, setFormLoading] = useState(false)
   const fileInputRef = useRef(null)
+  const [editingId, setEditingId] = useState(null)
+  const [editForm, setEditForm] = useState({ nome: '', descricao: '', preco: '', foto_url: '' })
+  const [editLoading, setEditLoading] = useState(false)
 
   const isDono = user && restaurante && user.id === restaurante.usuario_id
 
@@ -60,6 +63,51 @@ export default function Restaurante({ restaurantId, onNavigate, onAdicionar, car
       console.error(err)
     } finally {
       setFormLoading(false)
+    }
+  }
+
+  const handleEditClick = (produto) => {
+    setEditingId(produto.id)
+    setEditForm({
+      nome: produto.nome,
+      descricao: produto.descricao || '',
+      preco: produto.preco ? String(produto.preco) : '',
+      foto_url: produto.foto_url || '',
+    })
+  }
+
+  const handleEditCancel = () => {
+    setEditingId(null)
+    setEditForm({ nome: '', descricao: '', preco: '', foto_url: '' })
+  }
+
+  const handleEditProduto = async (e) => {
+    e.preventDefault()
+    if (!editForm.nome || !editForm.preco) return
+    setEditLoading(true)
+    try {
+      const updated = await api.updateProduto(editingId, {
+        nome: editForm.nome,
+        descricao: editForm.descricao,
+        preco: parseFloat(editForm.preco),
+        foto_url: editForm.foto_url,
+      })
+      setProdutos((prev) => prev.map((p) => (p.id === editingId ? updated : p)))
+      handleEditCancel()
+    } catch (err) {
+      console.error('Erro ao editar produto:', err)
+    } finally {
+      setEditLoading(false)
+    }
+  }
+
+  const handleDeleteProduto = async (produtoId) => {
+    if (!confirm('Tem certeza que deseja excluir este produto?')) return
+    try {
+      await api.deleteProduto(produtoId)
+      setProdutos((prev) => prev.filter((p) => p.id !== produtoId))
+    } catch (err) {
+      console.error('Erro ao deletar produto:', err)
     }
   }
 
@@ -160,6 +208,28 @@ export default function Restaurante({ restaurantId, onNavigate, onAdicionar, car
               </form>
             )}
 
+            {isDono && editingId && (
+              <div className="edit-overlay" onClick={handleEditCancel}>
+                <div className="edit-modal" onClick={(e) => e.stopPropagation()}>
+                  <form className="produto-form" onSubmit={handleEditProduto}>
+                    <h3>Editar produto</h3>
+                    <input type="text" placeholder="Nome do produto *" value={editForm.nome} onChange={(e) => setEditForm({...editForm, nome: e.target.value})} />
+                    <input type="text" placeholder="Descrição" value={editForm.descricao} onChange={(e) => setEditForm({...editForm, descricao: e.target.value})} />
+                    <input type="number" placeholder="Preço *" min="0" step="0.01" value={editForm.preco} onChange={(e) => setEditForm({...editForm, preco: e.target.value})} />
+                    <input type="text" placeholder="URL da Imagem (opcional)" value={editForm.foto_url} onChange={(e) => setEditForm({...editForm, foto_url: e.target.value})} />
+                    <div style={{ display: 'flex', gap: '8px' }}>
+                      <button type="submit" disabled={editLoading} style={{ flex: 1 }}>
+                        {editLoading ? 'Salvando...' : 'Salvar'}
+                      </button>
+                      <button type="button" onClick={handleEditCancel} style={{ flex: 1, background: '#888', color: '#fff' }}>
+                        Cancelar
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            )}
+
             <div className="restaurantes__grid">
               {produtos.length > 0 ? (
                 produtos.map((produto) => (
@@ -174,6 +244,24 @@ export default function Restaurante({ restaurantId, onNavigate, onAdicionar, car
                     <div className="restaurante-card__info">
                       <p>{produto.descricao || 'Sem descrição'}</p>
                     </div>
+                    {isDono && (
+                      <div style={{ display: 'flex', gap: '8px', width: '100%' }}>
+                        <button
+                          className="restaurante-card__button"
+                          onClick={() => handleEditClick(produto)}
+                          style={{ flex: 1, background: '#F28C38' }}
+                        >
+                          Editar
+                        </button>
+                        <button
+                          className="restaurante-card__button"
+                          onClick={() => handleDeleteProduto(produto.id)}
+                          style={{ flex: 1, background: '#D42B2B' }}
+                        >
+                          Excluir
+                        </button>
+                      </div>
+                    )}
                     <button
                       className="restaurante-card__button"
                       onClick={() => onAdicionar && onAdicionar({

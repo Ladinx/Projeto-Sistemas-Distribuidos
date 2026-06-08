@@ -255,3 +255,60 @@
   font-size: 0.9rem;
   margin: 0;
 }
+
+/* Edit modal overlay */
+.edit-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+.edit-modal {
+  background: white;
+  padding: 24px;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+.edit-modal .produto-form {
+  margin: 0;
+}
+.edit-modal .produto-form input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+.edit-modal .produto-form h3 {
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+.edit-modal .produto-form button[type="submit"] {
+  background: #F28C38;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.edit-modal .produto-form button[type="submit"]:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+.edit-modal .produto-form button[type="button"] {
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+}
