@@ -1,35 +1,36 @@
 import { useState, useEffect } from 'react'
 import Navbar from '../components/Navbar'
-import CardProduto from '../components/CardProduto'
 import { api } from '../api'
 import './Home.css'
 
-export default function Home({ onNavigate, onAdicionar, cart, user, onLogout, onLogin, onRemover, onCheckout }) {
-  const [frequentes, setFrequentes] = useState([])
+export default function Home({
+  onNavigate,
+  onAdicionar,
+  cart,
+  user,
+  onLogout,
+  onLogin,
+  onRemover,
+  onCheckout
+}) {
+  const [destaques, setDestaques] = useState([])
+  const [maisPedidos, setMaisPedidos] = useState([])
 
-  const PLACEHOLDER = [
-  { id: 'p1', nome: 'Smash Clássico', preco: 28 },
-  { id: 'p2', nome: 'Double Bacon', preco: 34 },
-  { id: 'p3', nome: 'BBQ Cheddar', preco: 31 },
-  { id: 'p4', nome: 'Crispy Frango', preco: 29 },
-]
+  useEffect(() => {
+    api.getDestaques()
+      .then(setDestaques)
+      .catch(() => setDestaques([]))
+  }, [])
 
-useEffect(() => {
-  const fetchFrequentes = async () => {
-    try {
-      const restaurantes = await api.getRestaurantes()
-      const produtos = await Promise.all(
-        restaurantes.slice(0, 4).map((r) => api.getProdutos(r.id))
-      )
-      const todos = produtos.flat()
-      setFrequentes(todos.length > 0 ? todos.slice(0, 4) : PLACEHOLDER)
-    } catch (err) {
-      setFrequentes(PLACEHOLDER)
-      console.error(err)
+  useEffect(() => {
+    if (user?.tipo === 'cliente') {
+      api.getMaisPedidos()
+        .then(setMaisPedidos)
+        .catch(() => setMaisPedidos([]))
+    } else {
+      setMaisPedidos([])
     }
-  }
-  fetchFrequentes()
-}, [])
+  }, [user])
 
   return (
     <div className="home">
@@ -63,7 +64,11 @@ useEffect(() => {
           <div className="hero__text">
             <h1>Entrega rápida<br />pra sua fome.</h1>
             <p>Os melhores smash burgers de Curitiba,<br />direto na sua porta.</p>
-            <button className="hero__cta" onClick={() => onNavigate('restaurantes')}>
+
+            <button
+              className="hero__cta"
+              onClick={() => onNavigate('restaurantes')}
+            >
               Ver restaurantes
             </button>
           </div>
@@ -71,31 +76,129 @@ useEffect(() => {
       </section>
 
       <section className="orange-section">
+
+        {/* Imagens fixas */}
         <div className="orange-section__featured-container">
-          <img src="/hambuguer.webp" alt="Hambúrguer destaque" className="orange-section__featured-img" />
-          <img src="/batatas.jpg" alt="Batatas destaque" className="orange-section__featured-img" />
+          <img
+            src="/hambuguer.webp"
+            alt="Hambúrguer destaque"
+            className="orange-section__featured-img"
+          />
+
+          <img
+            src="/batatas.jpg"
+            alt="Batatas destaque"
+            className="orange-section__featured-img"
+          />
         </div>
 
+        {/* Cards vindos da rota */}
         <div className="orange-section__frequent">
-          <h2 className="frequent__title">Pedidos com frequência:</h2>
+          <h2 className="frequent__title">Destaques:</h2>
+
           <div className="frequent__grid">
-            {frequentes.map((produto) => (
-              <CardProduto
-                key={produto.id}
-                nome={produto.nome}
-                preco={produto.preco}
-                imagem={produto.imagem}
-                onAdicionar={() => onAdicionar && onAdicionar({
-                  produto_id: produto.id,
-                  nome: produto.nome,
-                  preco: parseFloat(produto.preco),
-                  restaurante_id: produto.restaurante_id,
-                  quantidade: 1,
-                })}
-              />
+            {destaques.map((item) => (
+              <div key={item.id} className="destaque-card">
+                <div
+                  className="destaque-card__img"
+                  style={{
+                    backgroundImage: `url(${item.produto_foto})`
+                  }}
+                />
+
+                <div className="destaque-card__body">
+                  <h3 className="destaque-card__nome">
+                    {item.produto_nome}
+                  </h3>
+
+                  <span className="destaque-card__preco">
+                    R$ {parseFloat(item.preco).toFixed(2)}
+                  </span>
+
+                  <div className="destaque-card__restaurante">
+                    {item.restaurante_foto && (
+                      <img
+                        src={item.restaurante_foto}
+                        alt=""
+                        className="destaque-card__restaurante-avatar"
+                      />
+                    )}
+
+                    <span>{item.restaurante_nome}</span>
+                  </div>
+
+                  <button
+                    className="destaque-card__add"
+                    onClick={() =>
+                      onAdicionar?.({
+                        produto_id: item.id,
+                        nome: item.produto_nome,
+                        preco: parseFloat(item.preco),
+                        imagem: item.produto_foto,
+                        restaurante_id: item.restaurante_id,
+                        quantidade: 1
+                      })
+                    }
+                  >
+                    Adicionar ao carrinho
+                  </button>
+                </div>
+              </div>
             ))}
           </div>
         </div>
+
+        {/* Mais pedidos do cliente */}
+        {maisPedidos.length > 0 && (
+          <div className="orange-section__frequent">
+            <h2 className="frequent__title">
+              Pedidos com frequência:
+            </h2>
+
+            <div className="frequent__grid">
+              {maisPedidos.map((item) => (
+                <div
+                  key={item.produto_id}
+                  className="destaque-card"
+                >
+                  <div
+                    className="destaque-card__img"
+                    style={{
+                      backgroundImage: `url(${item.produto_foto})`
+                    }}
+                  />
+
+                  <div className="destaque-card__body">
+                    <h3 className="destaque-card__nome">
+                      {item.produto_nome}
+                    </h3>
+
+                    <span className="destaque-card__preco">
+                      R$ {parseFloat(item.preco).toFixed(2)}
+                    </span>
+
+                    <button
+                      className="destaque-card__add"
+                      onClick={() =>
+                        onAdicionar?.({
+                          produto_id: item.produto_id,
+                          nome: item.produto_nome,
+                          preco: parseFloat(item.preco),
+                          imagem: item.produto_foto,
+                          restaurante_id: item.restaurante_id,
+                          quantidade: 1
+                        })
+                      }
+                    >
+                      Adicionar ao carrinho
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
       </section>
     </div>
   )
