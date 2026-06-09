@@ -17,6 +17,7 @@ if (!process.env.FRONTEND_URL && process.env.NODE_ENV === 'production') {
 const allowedOrigins = [
   'http://localhost:3000',
   'http://localhost:5173',
+  'https://projeto-sistemas-distribuidos.vercel.app',
   process.env.FRONTEND_URL
 ].filter(Boolean);
 
@@ -26,7 +27,7 @@ app.use(cors({
     if (allowedOrigins.indexOf(origin) !== -1 || process.env.NODE_ENV !== 'production') {
       return callback(null, true);
     }
-    return callback(new Error('Acesso não permitido pelo CORS'), false);
+    return callback(null, false);
   },
   credentials: true
 }));
@@ -43,6 +44,7 @@ const cardapioRoutes = require('./routes/cardapio');
 const produtoRoutes = require('./routes/produtos');
 const pedidoRoutes = require('./routes/pedidos');
 const pagamentoRoutes = require('./routes/pagamentos');
+const uploadRoutes = require('./routes/upload');
 
 app.use('/auth', authRoutes);
 app.use('/restaurantes', restauranteRoutes);
@@ -50,6 +52,7 @@ app.use('/restaurantes', cardapioRoutes);
 app.use('/produtos', produtoRoutes);
 app.use('/pedidos', pedidoRoutes);
 app.use('/pagamentos', pagamentoRoutes);
+app.use('/upload', uploadRoutes);
 
 app.listen(PORT, () => {
   console.log(`[server] Servidor rodando na porta ${PORT} em modo ${process.env.NODE_ENV || 'development'}`);

@@ -65,6 +65,15 @@
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
 }
 
+.restaurante-card__img {
+  aspect-ratio: 4 / 3;
+  background-size: cover;
+  background-position: center;
+  background-color: #F0E8D8;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
 .restaurante-card__header {
   display: flex;
   justify-content: space-between;
@@ -254,4 +263,105 @@
   color: #D42B2B;
   font-size: 0.9rem;
   margin: 0;
+}
+
+/* Edit modal overlay */
+.edit-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+.edit-modal {
+  background: white;
+  padding: 24px;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+.edit-modal .produto-form {
+  margin: 0;
+}
+.edit-modal .produto-form input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+.edit-modal .produto-form h3 {
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+.edit-modal .produto-form button[type="submit"] {
+  background: #F28C38;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.edit-modal .produto-form button[type="submit"]:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+.edit-modal .produto-form button[type="button"] {
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.produto-form__image-row {
+  display: flex;
+  gap: 8px;
+}
+
+.produto-form__image-btn {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border: 2px solid #F0E8D8;
+  border-radius: 50px;
+  background: white;
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 0.95rem;
+  color: #6b6375;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.produto-form__image-btn:hover {
+  border-color: #F28C38;
+  color: #F28C38;
+}
+
+.produto-form__image-btn--remove {
+  flex: 0;
+  min-width: fit-content;
+  padding: 0.75rem 1.25rem;
+  border-color: #f0c8c8;
+  color: #D42B2B;
+}
+
+.produto-form__image-btn--remove:hover {
+  border-color: #D42B2B;
+  background: #fff0f0;
+}
+
+.produto-form__thumb {
+  width: 80px;
+  height: 80px;
+  border-radius: 8px;
+  object-fit: cover;
+  align-self: flex-start;
 }

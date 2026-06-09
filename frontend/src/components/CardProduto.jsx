@@ -1,6 +1,6 @@
 import './CardProduto.css'
 
-export default function CardProduto({ nome, preco, imagem, onAdicionar }) {
+export default function CardProduto({ nome, preco, imagem, produto_id, restaurante_id, onAdicionar }) {
   return (
     <div className="card-produto">
       <div
@@ -13,7 +13,7 @@ export default function CardProduto({ nome, preco, imagem, onAdicionar }) {
         <span className="card-produto__nome">{nome}</span>
         <button
           className="card-produto__btn"
-          onClick={() => onAdicionar && onAdicionar({ nome, preco, imagem })}
+          onClick={() => onAdicionar && onAdicionar({ nome, preco, imagem, produto_id, restaurante_id })}
           aria-label={`Adicionar ${nome} ao carrinho`}
         >
           +

@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import './CheckoutModal.css'
 
-export default function CheckoutModal({ onConfirm, onClose }) {
-  const [endereco, setEndereco] = useState('')
+export default function CheckoutModal({ onConfirm, onClose, user }) {
+  const [endereco, setEndereco] = useState(user?.endereco || '')
   const [pagamento, setPagamento] = useState('pix')
   const [troco, setTroco] = useState('')
   const [error, setError] = useState(null)

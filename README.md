@@ -1,5 +1,4 @@
-# Marketplace de Delivery (Nome a decidir)
-
+# Burguers n' Rides
 Este é o repositório do projeto acadêmico de Programação Distribuída. O projeto consiste em um clone simplificado de um marketplace de delivery no modelo **SaaS**, implantado em nuvem pública (PaaS).
 
 ## Acesso Rápido (Produção)

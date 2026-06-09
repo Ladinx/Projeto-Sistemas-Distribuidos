@@ -9,7 +9,6 @@ export default function Auth({ onNavigate, onLogin, onRegister, authView, user }
     nome: '',
     tipo: 'cliente',
     descricao: '',
-    categoria: '',
     endereco: '',
   })
   const [error, setError] = useState(null)
@@ -143,17 +142,6 @@ export default function Auth({ onNavigate, onLogin, onRegister, authView, user }
                     type="text"
                     name="descricao"
                     value={formData.descricao}
-                    onChange={handleChange}
-                    className="form-input"
-                  />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="categoria" className="form-label">Categoria</label>
-                  <input
-                    id="categoria"
-                    type="text"
-                    name="categoria"
-                    value={formData.categoria}
                     onChange={handleChange}
                     className="form-input"
                   />

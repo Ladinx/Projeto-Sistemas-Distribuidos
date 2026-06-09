@@ -39,6 +39,7 @@ export const api = {
   register: (body) => request('/auth/register', { method: 'POST', body: JSON.stringify(body) }),
   login: (body) => request('/auth/login', { method: 'POST', body: JSON.stringify(body) }),
   me: () => request('/auth/me'),
+  updateProfile: (body) => request('/auth/profile', { method: 'PUT', body: JSON.stringify(body) }),
   logout: () => removeToken(),
 
   // Restaurantes
@@ -47,6 +48,7 @@ export const api = {
   updateRestaurante: (id, body) => request(`/restaurantes/${id}`, { method: 'PUT', body: JSON.stringify(body) }),
 
   // Produtos
+  getDestaques: () => request('/produtos/destaque'),
   getProdutos: (restauranteId) => request(`/restaurantes/${restauranteId}/produtos`),
   createProduto: (restauranteId, body) => request(`/restaurantes/${restauranteId}/produtos`, { method: 'POST', body: JSON.stringify(body) }),
   updateProduto: (produtoId, body) => request(`/produtos/${produtoId}`, { method: 'PUT', body: JSON.stringify(body) }),
@@ -57,10 +59,28 @@ export const api = {
   getPedidos: () => request('/pedidos'),
   getPedido: (id) => request(`/pedidos/${id}`),
   updatePedidoStatus: (id, body) => request(`/pedidos/${id}/status`, { method: 'PUT', body: JSON.stringify(body) }),
+  getMaisPedidos: () => request('/pedidos/mais-pedidos'),
 
   // Pagamentos
   createPagamento: (pedidoId, body) => request(`/pagamentos/${pedidoId}`, { method: 'POST', body: JSON.stringify(body) }),
   getPagamento: (pedidoId) => request(`/pagamentos/${pedidoId}`),
+
+  // Upload
+  uploadImage: async (file) => {
+    const token = getToken();
+    const formData = new FormData();
+    formData.append('image', file);
+
+    const res = await fetch(`${API_URL}/upload`, {
+      method: 'POST',
+      headers: token ? { 'Authorization': `Bearer ${token}` } : {},
+      body: formData,
+    });
+
+    const data = await res.json();
+    if (!res.ok) throw { status: res.status, ...data };
+    return data;
+  },
 
   // Token helpers
   setToken,

@@ -61,6 +61,9 @@ export default function Navbar({ carrinho = [], onRemover, onNavigate, user, onL
           <li><a href="#" onClick={(e) => { e.preventDefault(); onNavigate?.('home') }}>menu</a></li>
           <li><a href="#" onClick={(e) => { e.preventDefault(); onNavigate?.('pedidos') }}>Pedidos</a></li>
           <li><a href="#" onClick={(e) => { e.preventDefault(); onNavigate?.('restaurantes') }}>restaurantes</a></li>
+          {user && (
+            <li><a href="#" onClick={(e) => { e.preventDefault(); onNavigate?.('perfil') }}>Meu Perfil</a></li>
+          )}
           <li>
             <button className="navbar__cart-btn" onClick={() => setAberto(true)}>
               <FiShoppingCart size={22} />
@@ -71,9 +74,14 @@ export default function Navbar({ carrinho = [], onRemover, onNavigate, user, onL
           </li>
           <li>
             {user ? (
-              <button className="navbar__auth-btn" onClick={onLogout}>
-                <FiLogOut size={18} /> Sair
-              </button>
+              <div className="navbar__user-menu">
+                {user.foto_url && (
+                  <img src={user.foto_url} alt="Perfil" className="navbar__user-photo" />
+                )}
+                <button className="navbar__auth-btn" onClick={onLogout}>
+                  <FiLogOut size={18} /> Sair
+                </button>
+              </div>
             ) : (
               <button className="navbar__auth-btn" onClick={() => onLogin && onLogin()}>
                 <FiLogIn size={18} /> Entrar
@@ -143,6 +151,7 @@ export default function Navbar({ carrinho = [], onRemover, onNavigate, user, onL
 
       {showCheckout && (
         <CheckoutModal
+          user={user}
           onClose={() => setShowCheckout(false)}
           onConfirm={({ endereco, pagamento }) => {
             onCheckout && onCheckout(endereco, pagamento)

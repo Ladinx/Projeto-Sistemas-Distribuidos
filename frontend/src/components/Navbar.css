@@ -171,6 +171,20 @@
   }
 }
 
+.navbar__user-menu {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.navbar__user-photo {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #F5E642;
+}
+
 .cart-overlay {
   position: fixed;
   inset: 0;

@@ -3,31 +3,55 @@ const router = express.Router();
 const db = require('../db');
 const { authenticateToken, permitOnly } = require('../middleware/auth');
 
+router.get('/destaque', async (req, res) => {
+  try {
+    const result = await db.query(`
+      SELECT p.id, p.nome AS produto_nome, p.preco, p.foto_url AS produto_foto,
+             r.id AS restaurante_id, r.nome AS restaurante_nome, r.foto_url AS restaurante_foto
+      FROM produtos p
+      JOIN restaurantes r ON p.restaurante_id = r.id
+      WHERE p.foto_url IS NOT NULL AND p.foto_url != '' AND p.ativo = true
+      ORDER BY RANDOM()
+      LIMIT 4
+    `);
+    return res.json(result.rows);
+  } catch (error) {
+    console.error('Erro ao buscar destaques:', error);
+    return res.status(500).json({ error: 'Erro interno no servidor' });
+  }
+});
+
 router.put('/:id', authenticateToken, permitOnly(['restaurante']), async (req, res) => {
   const { id } = req.params;
-  const { nome, descricao, preco, ativo } = req.body;
+  const { nome, descricao, preco, ativo, foto_url } = req.body;
 
   if (!nome || preco === undefined) {
     return res.status(400).json({ error: 'Nome e Preço são obrigatórios.' });
   }
 
   try {
-    const prodCheck = await db.query('SELECT restaurante_id FROM produtos WHERE id = $1', [id]);
+    const prodCheck = await db.query(
+      `SELECT p.id, r.usuario_id
+       FROM produtos p
+       JOIN restaurantes r ON p.restaurante_id = r.id
+       WHERE p.id = $1`,
+      [id]
+    );
     if (prodCheck.rows.length === 0) {
       return res.status(404).json({ error: 'Produto não encontrado.' });
     }
 
-    if (prodCheck.rows[0].restaurante_id !== req.user.id) {
+    if (prodCheck.rows[0].usuario_id !== req.user.id) {
       return res.status(403).json({ error: 'Acesso negado. Este produto pertence a outro restaurante.' });
     }
 
     const queryText = `
       UPDATE produtos
-      SET nome = $1, descricao = $2, preco = $3, ativo = $4
-      WHERE id = $5
-      RETURNING id, restaurante_id, nome, descricao, preco, ativo, criado_em
+      SET nome = $1, descricao = $2, preco = $3, ativo = $4, foto_url = $5
+      WHERE id = $6
+      RETURNING id, restaurante_id, nome, descricao, preco, foto_url, ativo, criado_em
     `;
-    const values = [nome, descricao || null, preco, ativo !== undefined ? ativo : true, id];
+    const values = [nome, descricao || null, preco, ativo !== undefined ? ativo : true, foto_url || null, id];
     const result = await db.query(queryText, values);
 
     return res.json(result.rows[0]);
@@ -42,12 +66,18 @@ router.delete('/:id', authenticateToken, permitOnly(['restaurante']), async (req
   const { id } = req.params;
 
   try {
-    const prodCheck = await db.query('SELECT restaurante_id FROM produtos WHERE id = $1', [id]);
+    const prodCheck = await db.query(
+      `SELECT p.id, r.usuario_id
+       FROM produtos p
+       JOIN restaurantes r ON p.restaurante_id = r.id
+       WHERE p.id = $1`,
+      [id]
+    );
     if (prodCheck.rows.length === 0) {
       return res.status(404).json({ error: 'Produto não encontrado.' });
     }
 
-    if (prodCheck.rows[0].restaurante_id !== req.user.id) {
+    if (prodCheck.rows[0].usuario_id !== req.user.id) {
       return res.status(403).json({ error: 'Acesso negado. Este produto pertence a outro restaurante.' });
     }
 

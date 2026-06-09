@@ -125,8 +125,33 @@ router.get('/', authenticateToken, async (req, res) => {
   }
 });
 
-// faz join com restaurantes
-// ownership do restaurante é verificada via query ao invés de comparar direto por id
+// GET /pedidos/mais-pedidos -> Produtos mais pedidos pelo usuario logado
+router.get('/mais-pedidos', authenticateToken, async (req, res) => {
+  const userId = req.user.id;
+
+  try {
+    const queryText = `
+      SELECT pi.produto_id, p.nome AS produto_nome, p.preco,
+             p.foto_url AS produto_foto,
+             p.restaurante_id, r.nome AS restaurante_nome, r.foto_url AS restaurante_foto,
+             COUNT(*) AS total_vezes
+      FROM pedido_itens pi
+      JOIN pedidos pd ON pi.pedido_id = pd.id
+      JOIN produtos p ON pi.produto_id = p.id
+      JOIN restaurantes r ON p.restaurante_id = r.id
+      WHERE pd.cliente_id = $1
+      GROUP BY pi.produto_id, p.nome, p.preco, p.restaurante_id, r.nome
+      ORDER BY total_vezes DESC
+      LIMIT 10
+    `;
+    const result = await db.query(queryText, [userId]);
+    return res.json(result.rows);
+  } catch (error) {
+    console.error('Erro ao buscar mais pedidos:', error);
+    return res.status(500).json({ error: 'Erro interno no servidor' });
+  }
+});
+
 router.get('/:id', authenticateToken, async (req, res) => {
   const { id } = req.params;
   const userId = req.user.id;
