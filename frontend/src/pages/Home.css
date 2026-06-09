@@ -102,17 +102,11 @@
   margin-top: 3.4rem;
 }
 
-.orange-section__featured {
+.orange-section__featured-img {
+  width: 100%;
   aspect-ratio: 2 / 1;
-  background: #D9C9B5;
+  object-fit: cover;
   border-radius: 12px;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #a8621f;
-  font-size: 0.85rem;
-  font-weight: 600;
 }
 
 .orange-section__frequent {
