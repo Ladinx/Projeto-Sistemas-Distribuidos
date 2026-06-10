@@ -56,7 +56,7 @@ export default function Restaurantes({ onNavigate, onAdicionar, cart, user, onLo
               restaurantes.map((restaurante) => (
                 <div key={restaurante.id} className="restaurante-card">
                   {restaurante.foto_url && (
-                    <div className="restaurante-card__img" style={{ backgroundImage: `url(${restaurante.foto_url})`, height: '150px', backgroundSize: 'cover', backgroundPosition: 'center', borderRadius: '8px 8px 0 0' }} />
+                    <div className="restaurante-card__img" style={{ backgroundImage: `url(${restaurante.foto_url})` }} />
                   )}
                   <div className="restaurante-card__header">
                     <h2 className="restaurante-card__name">{restaurante.nome}</h2>
