@@ -133,7 +133,7 @@ export default function Auth({ onNavigate, onLogin, onRegister, authView, user }
               />
             </div>
 
-            {authView === 'register' && (
+            {authView === 'register' && formData.tipo === 'restaurante' && (
               <>
                 <div className="form-group">
                   <label htmlFor="descricao" className="form-label">Descrição</label>
