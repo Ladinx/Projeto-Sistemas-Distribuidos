@@ -16,12 +16,12 @@ export default function Navbar({ carrinho = [], onRemover, onNavigate, user, onL
   return (
     <div className="navbar__wrapper">
       <nav className="navbar">
-        <div className="navbar__logo">
+        <div className="navbar__logo" onClick={() => onNavigate?.('home')}>
           Burguers n' Rides
           <span>CWB</span>
         </div>
         
-        <div className="navbar__burger-container">
+        <div className="navbar__burger-container" onClick={() => onNavigate?.('home')}>
           <svg className="navbar__burger" viewBox="0 0 100 85" xmlns="http://www.w3.org/2000/svg">
             <g className="steam steam-1">
               <path d="M 30 10 Q 28 5 30 0" stroke="white" strokeWidth="2" fill="none" strokeLinecap="round" opacity="0.7"/>
