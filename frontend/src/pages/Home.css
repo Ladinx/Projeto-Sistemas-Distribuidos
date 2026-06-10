@@ -87,26 +87,30 @@
 /* SEÇÃO LARANJA */
 .orange-section {
   background: #F0E8D8;
-  padding: 1rem 1.5rem 1.5rem;
-  display: flex;
-  gap: 1rem;
-  align-items: flex-start;
+  padding: 0.5rem 1.5rem 2rem;
 }
 
-.orange-section__featured-container {
-  width: 30%;
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin-top: 2rem;
+.orange-section + .orange-section {
+  padding-top: 0;
 }
 
-.orange-section__featured-placeholder {
+.section-title {
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.3rem;
+  color: #2C1810;
+  margin: 0 0 0.75rem 0;
+}
+
+.destaques-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.card-placeholder {
   aspect-ratio: 2 / 1;
   background: #D9C9B5;
-  border-radius: 12px;
-  flex-shrink: 0;
+  border-radius: 10px;
 }
 
 .destaque-card {
@@ -123,29 +127,29 @@
 }
 
 .destaque-card__img {
-  aspect-ratio: 2 / 1;
+  aspect-ratio: 3 / 1;
   background-size: cover;
   background-position: center;
   background-color: #D9C9B5;
 }
 
 .destaque-card__body {
-  padding: 0.35rem 0.5rem;
+  padding: 0.5rem 0.65rem 0.55rem;
   display: flex;
   flex-direction: column;
-  gap: 0.1rem;
+  gap: 0.2rem;
 }
 
 .destaque-card__nome {
   font-family: 'Fredoka One', cursive;
-  font-size: 0.75rem;
+  font-size: 0.88rem;
   color: #2C1810;
   margin: 0;
   line-height: 1.2;
 }
 
 .destaque-card__preco {
-  font-size: 0.7rem;
+  font-size: 0.82rem;
   font-weight: 700;
   color: #D42B2B;
 }
@@ -153,31 +157,31 @@
 .destaque-card__restaurante {
   display: flex;
   align-items: center;
-  gap: 0.3rem;
+  gap: 0.35rem;
   margin-top: 0.1rem;
-  font-size: 0.65rem;
+  font-size: 0.75rem;
   color: #6b6375;
   font-weight: 600;
 }
 
 .destaque-card__restaurante-avatar {
-  width: 14px;
-  height: 14px;
+  width: 18px;
+  height: 18px;
   border-radius: 50%;
   object-fit: cover;
   background: #F0E8D8;
 }
 
 .destaque-card__add {
-  margin-top: 0.25rem;
+  margin-top: 0.35rem;
   width: 100%;
-  padding: 0.2rem 0.4rem;
+  padding: 0.3rem 0.5rem;
   border: none;
   border-radius: 50px;
   background: #F28C38;
   color: white;
   font-family: 'Fredoka One', cursive;
-  font-size: 0.6rem;
+  font-size: 0.7rem;
   cursor: pointer;
   transition: background 0.2s, transform 0.15s;
 }
@@ -187,22 +191,4 @@
   transform: scale(1.02);
 }
 
-.orange-section__frequent {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-}
 
-.frequent__title {
-  font-family: 'Fredoka One', cursive;
-  font-size: 1.1rem;
-  color: #2C1810;
-  margin: 0;
-}
-
-.frequent__grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 6px;
-}
