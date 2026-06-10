@@ -66,9 +66,9 @@ export default function Navbar({ carrinho = [], onRemover, onNavigate, user, onL
         </div>
 
         <ul className="navbar__links">
-          <li><a href="#" onClick={(e) => { e.preventDefault(); onNavigate?.('home') }}>menu</a></li>
+          <li><a href="#" onClick={(e) => { e.preventDefault(); onNavigate?.('home') }}>Menu</a></li>
           <li><a href="#" onClick={(e) => { e.preventDefault(); onNavigate?.('pedidos') }}>Pedidos</a></li>
-          <li><a href="#" onClick={(e) => { e.preventDefault(); onNavigate?.('restaurantes') }}>restaurantes</a></li>
+          <li><a href="#" onClick={(e) => { e.preventDefault(); onNavigate?.('restaurantes') }}>Restaurantes</a></li>
           {user && (
             <li><a href="#" onClick={(e) => { e.preventDefault(); onNavigate?.('perfil') }}>Meu Perfil</a></li>
           )}
