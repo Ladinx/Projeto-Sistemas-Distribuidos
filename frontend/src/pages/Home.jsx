@@ -64,6 +64,7 @@ export default function Home({ onNavigate, onAdicionar, cart, user, onLogout, on
 
       <section className="orange-section">
         <div className="orange-section__featured-container">
+          <h2 className="frequent__title">Destaques</h2>
           {destaques.length > 0 ? destaques.map((item) => (
             <div key={item.id} className="destaque-card">
               <div className="destaque-card__img" style={{ backgroundImage: `url(${item.produto_foto})` }} />
@@ -103,7 +104,7 @@ export default function Home({ onNavigate, onAdicionar, cart, user, onLogout, on
 
         {maisPedidos.length > 0 && (
           <div className="orange-section__frequent">
-            <h2 className="frequent__title">Pedidos com frequencia:</h2>
+            <h2 className="frequent__title">Mais Pedidos</h2>
             <div className="frequent__grid">
               {maisPedidos.map((item) => (
                 <div key={item.produto_id} className="destaque-card">
