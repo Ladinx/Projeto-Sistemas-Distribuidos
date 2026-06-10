@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState } from 'react'
 import { FiShoppingCart, FiX, FiTrash2, FiLogIn, FiLogOut } from 'react-icons/fi'
 import './Navbar.css'
 import CheckoutModal from './CheckoutModal'
@@ -6,14 +6,6 @@ import CheckoutModal from './CheckoutModal'
 export default function Navbar({ carrinho = [], onRemover, onNavigate, user, onLogout, onLogin, onCheckout }) {
   const [aberto, setAberto] = useState(false)
   const [showCheckout, setShowCheckout] = useState(false)
-  const prevCartLen = useRef(0)
-
-  useEffect(() => {
-    if (carrinho.length > prevCartLen.current) {
-      setAberto(true)
-    }
-    prevCartLen.current = carrinho.length
-  }, [carrinho.length])
 
   const total = carrinho.reduce(
     (acc, item) => acc + (parseFloat(item.preco) || 0) * (item.quantidade || 1),
