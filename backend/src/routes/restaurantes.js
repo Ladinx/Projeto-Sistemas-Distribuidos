@@ -45,7 +45,7 @@ router.get('/:id', async (req, res) => {
 // correção da verificação de ownership
 router.put('/:id', authenticateToken, permitOnly(['restaurante']), async (req, res) => {
   const { id } = req.params;
-  const { nome, descricao, endereco } = req.body;
+  const { nome, descricao, endereco, foto_url } = req.body;
 
   if (!nome) {
     return res.status(400).json({ error: 'O nome é obrigatório.' });
@@ -62,11 +62,11 @@ router.put('/:id', authenticateToken, permitOnly(['restaurante']), async (req, r
 
     const queryText = `
       UPDATE restaurantes
-      SET nome = $1, descricao = $2, endereco = $3
-      WHERE id = $4
+      SET nome = $1, descricao = $2, endereco = $3, foto_url = COALESCE($4, foto_url)
+      WHERE id = $5
       RETURNING id, nome, descricao, endereco, foto_url
     `;
-    const values = [nome, descricao || null, endereco || null, id];
+    const values = [nome, descricao || null, endereco || null, foto_url || null, id];
     const result = await db.query(queryText, values);
 
     return res.json(result.rows[0]);
