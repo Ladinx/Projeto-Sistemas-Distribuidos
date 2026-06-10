@@ -121,26 +121,26 @@ export default function Navbar({ carrinho = [], onRemover, onNavigate, user, onL
                       </div>
                     </li>
                   ))}
+                  <li className="cart-drawer__actions">
+                    <button
+                      className="cart-drawer__checkout"
+                      disabled={!hasCheckout}
+                      onClick={() => {
+                        if (!hasCheckout) return
+                        setShowCheckout(true)
+                      }}
+                    >
+                      Finalizar pedido
+                    </button>
+                    {!hasCheckout && (
+                      <p className="cart-drawer__hint">
+                        Adicione produtos do cardápio de um restaurante para finalizar.
+                      </p>
+                    )}
+                  </li>
                 </ul>
                 <div className="cart-drawer__total">
                   Total: <strong>R$ {total.toFixed(2)}</strong>
-                </div>
-                <div className="cart-drawer__actions">
-                  <button
-                    className="cart-drawer__checkout"
-                    disabled={!hasCheckout}
-                    onClick={() => {
-                      if (!hasCheckout) return
-                      setShowCheckout(true)
-                    }}
-                  >
-                    Finalizar pedido
-                  </button>
-                  {!hasCheckout && (
-                    <p className="cart-drawer__hint">
-                      Adicione produtos do cardápio de um restaurante para finalizar.
-                    </p>
-                  )}
                 </div>
               </>
             )}
