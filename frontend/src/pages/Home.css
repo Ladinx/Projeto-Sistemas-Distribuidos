@@ -94,10 +94,11 @@
   padding-top: 0;
 }
 
-.section-title {
+.section-title,
+.frequent__title {
   font-family: 'Fredoka One', cursive;
   font-size: 1.3rem;
-  color: #2C1810;
+  color: #000;
   margin: 0 0 0.75rem 0;
 }
 
