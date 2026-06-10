@@ -152,8 +152,8 @@ export default function Navbar({ carrinho = [], onRemover, onNavigate, user, onL
         <CheckoutModal
           user={user}
           onClose={() => setShowCheckout(false)}
-          onConfirm={({ endereco, pagamento }) => {
-            onCheckout && onCheckout(endereco, pagamento)
+          onConfirm={({ endereco, pagamento, troco }) => {
+            onCheckout && onCheckout(endereco, pagamento, troco)
             setShowCheckout(false)
             setAberto(false)
           }}

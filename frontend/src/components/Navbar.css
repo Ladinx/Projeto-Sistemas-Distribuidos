@@ -301,7 +301,9 @@
 }
 
 .cart-drawer__checkout:disabled {
-  background: rgba(255,255,255,0.2);
+  background: rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.3);
   cursor: not-allowed;
 }
 

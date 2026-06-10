@@ -13,7 +13,7 @@ export default function CardProduto({ nome, preco, imagem, produto_id, restauran
         <span className="card-produto__nome">{nome}</span>
         <button
           className="card-produto__btn"
-          onClick={() => onAdicionar && onAdicionar({ nome, preco, imagem, produto_id, restaurante_id })}
+          onClick={() => onAdicionar && onAdicionar({ nome, preco, imagem, produto_id, restaurante_id, quantidade: 1 })}
           aria-label={`Adicionar ${nome} ao carrinho`}
         >
           +
