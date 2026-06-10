@@ -107,6 +107,17 @@
   gap: 10px;
 }
 
+/* Fallback: caso o JS antigo ainda esteja no ar, os cards nao ficam full-width */
+.orange-section__featured-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.orange-section__featured-container .frequent__title {
+  grid-column: 1 / -1;
+}
+
 .card-placeholder {
   aspect-ratio: 2 / 1;
   background: #D9C9B5;
