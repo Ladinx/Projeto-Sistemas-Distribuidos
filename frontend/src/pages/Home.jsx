@@ -3,6 +3,37 @@ import Navbar from '../components/Navbar'
 import { api } from '../api'
 import './Home.css'
 
+function Card({ item, onAdicionar }) {
+  return (
+    <div className="destaque-card">
+      <div className="destaque-card__img" style={{ backgroundImage: `url(${item.produto_foto})` }} />
+      <div className="destaque-card__body">
+        <h3 className="destaque-card__nome">{item.produto_nome}</h3>
+        <span className="destaque-card__preco">R$ {parseFloat(item.preco).toFixed(2)}</span>
+        <div className="destaque-card__restaurante">
+          {item.restaurante_foto && (
+            <img src={item.restaurante_foto} alt="" className="destaque-card__restaurante-avatar" />
+          )}
+          <span>{item.restaurante_nome}</span>
+        </div>
+        <button
+          className="destaque-card__add"
+          onClick={() => onAdicionar && onAdicionar({
+            produto_id: item.id ?? item.produto_id,
+            nome: item.produto_nome,
+            preco: parseFloat(item.preco),
+            imagem: item.produto_foto,
+            restaurante_id: item.restaurante_id,
+            quantidade: 1,
+          })}
+        >
+          Adicionar ao carrinho
+        </button>
+      </div>
+    </div>
+  )
+}
+
 export default function Home({ onNavigate, onAdicionar, cart, user, onLogout, onLogin, onRemover, onCheckout }) {
   const [maisPedidos, setMaisPedidos] = useState([])
   const [destaques, setDestaques] = useState([])
@@ -14,14 +45,10 @@ export default function Home({ onNavigate, onAdicionar, cart, user, onLogout, on
   }, [])
 
   useEffect(() => {
-    if (user && user.tipo === 'cliente') {
-      api.getMaisPedidos()
-        .then(setMaisPedidos)
-        .catch(() => setMaisPedidos([]))
-    } else {
-      setMaisPedidos([])
-    }
-  }, [user])
+    api.getMaisPedidos()
+      .then(setMaisPedidos)
+      .catch(() => setMaisPedidos([]))
+  }, [])
 
   return (
     <div className="home">
@@ -63,81 +90,31 @@ export default function Home({ onNavigate, onAdicionar, cart, user, onLogout, on
       </section>
 
       <section className="orange-section">
-        <div className="orange-section__featured-container">
-          <h2 className="frequent__title">Destaques</h2>
+        <h2 className="section-title">Destaques</h2>
+        <div className="destaques-grid">
           {destaques.length > 0 ? destaques.map((item) => (
-            <div key={item.id} className="destaque-card">
-              <div className="destaque-card__img" style={{ backgroundImage: `url(${item.produto_foto})` }} />
-              <div className="destaque-card__body">
-                <h3 className="destaque-card__nome">{item.produto_nome}</h3>
-                <span className="destaque-card__preco">R$ {parseFloat(item.preco).toFixed(2)}</span>
-                <div className="destaque-card__restaurante">
-                  {item.restaurante_foto && (
-                    <img src={item.restaurante_foto} alt="" className="destaque-card__restaurante-avatar" />
-                  )}
-                  <span>{item.restaurante_nome}</span>
-                </div>
-                <button
-                  className="destaque-card__add"
-                  onClick={() => onAdicionar && onAdicionar({
-                    produto_id: item.id,
-                    nome: item.produto_nome,
-                    preco: parseFloat(item.preco),
-                    imagem: item.produto_foto,
-                    restaurante_id: item.restaurante_id,
-                    quantidade: 1,
-                  })}
-                >
-                  Adicionar ao carrinho
-                </button>
-              </div>
-            </div>
+            <Card key={item.id} item={item} onAdicionar={onAdicionar} />
           )) : (
             <>
-              <div className="orange-section__featured-placeholder" />
-              <div className="orange-section__featured-placeholder" />
-              <div className="orange-section__featured-placeholder" />
-              <div className="orange-section__featured-placeholder" />
+              <div className="card-placeholder" />
+              <div className="card-placeholder" />
+              <div className="card-placeholder" />
+              <div className="card-placeholder" />
             </>
           )}
         </div>
-
-        {maisPedidos.length > 0 && (
-          <div className="orange-section__frequent">
-            <h2 className="frequent__title">Mais Pedidos</h2>
-            <div className="frequent__grid">
-              {maisPedidos.map((item) => (
-                <div key={item.produto_id} className="destaque-card">
-                  <div className="destaque-card__img" style={{ backgroundImage: `url(${item.produto_foto})` }} />
-                  <div className="destaque-card__body">
-                    <h3 className="destaque-card__nome">{item.produto_nome}</h3>
-                    <span className="destaque-card__preco">R$ {parseFloat(item.preco).toFixed(2)}</span>
-                    <div className="destaque-card__restaurante">
-                      {item.restaurante_foto && (
-                        <img src={item.restaurante_foto} alt="" className="destaque-card__restaurante-avatar" />
-                      )}
-                      <span>{item.restaurante_nome}</span>
-                    </div>
-                    <button
-                      className="destaque-card__add"
-                      onClick={() => onAdicionar && onAdicionar({
-                        produto_id: item.produto_id,
-                        nome: item.produto_nome,
-                        preco: parseFloat(item.preco),
-                        imagem: item.produto_foto,
-                        restaurante_id: item.restaurante_id,
-                        quantidade: 1,
-                      })}
-                    >
-                      Adicionar ao carrinho
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
       </section>
+
+      {maisPedidos.length > 0 && (
+        <section className="orange-section">
+          <h2 className="section-title">Mais Pedidos</h2>
+          <div className="destaques-grid">
+            {maisPedidos.map((item) => (
+              <Card key={item.id} item={item} onAdicionar={onAdicionar} />
+            ))}
+          </div>
+        </section>
+      )}
     </div>
   )
 }

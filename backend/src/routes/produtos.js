@@ -89,6 +89,26 @@ router.delete('/:id', authenticateToken, permitOnly(['restaurante']), async (req
   }
 });
 
+router.get('/mais-pedidos', async (req, res) => {
+  try {
+    const result = await db.query(`
+      SELECT p.id, p.nome AS produto_nome, p.preco, p.foto_url AS produto_foto,
+             r.id AS restaurante_id, r.nome AS restaurante_nome, r.foto_url AS restaurante_foto
+      FROM pedido_itens pi
+      JOIN produtos p ON pi.produto_id = p.id AND p.ativo = true
+      JOIN restaurantes r ON p.restaurante_id = r.id
+      GROUP BY p.id, p.nome, p.preco, p.foto_url, r.id, r.nome, r.foto_url
+      HAVING COUNT(*) >= 3
+      ORDER BY COUNT(*) DESC
+      LIMIT 8
+    `);
+    return res.json(result.rows);
+  } catch (error) {
+    console.error('Erro ao buscar mais pedidos:', error);
+    return res.status(500).json({ error: 'Erro interno no servidor' });
+  }
+});
+
 module.exports = router;
 
 // reduzi p PUT e DELETE apenas
