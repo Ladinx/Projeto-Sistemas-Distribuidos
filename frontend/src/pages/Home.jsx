@@ -3,18 +3,9 @@ import Navbar from '../components/Navbar'
 import { api } from '../api'
 import './Home.css'
 
-export default function Home({
-  onNavigate,
-  onAdicionar,
-  cart,
-  user,
-  onLogout,
-  onLogin,
-  onRemover,
-  onCheckout
-}) {
-  const [destaques, setDestaques] = useState([])
+export default function Home({ onNavigate, onAdicionar, cart, user, onLogout, onLogin, onRemover, onCheckout }) {
   const [maisPedidos, setMaisPedidos] = useState([])
+  const [destaques, setDestaques] = useState([])
 
   useEffect(() => {
     api.getDestaques()
@@ -23,7 +14,7 @@ export default function Home({
   }, [])
 
   useEffect(() => {
-    if (user?.tipo === 'cliente') {
+    if (user && user.tipo === 'cliente') {
       api.getMaisPedidos()
         .then(setMaisPedidos)
         .catch(() => setMaisPedidos([]))
@@ -64,11 +55,7 @@ export default function Home({
           <div className="hero__text">
             <h1>Entrega rápida<br />pra sua fome.</h1>
             <p>Os melhores smash burgers de Curitiba,<br />direto na sua porta.</p>
-
-            <button
-              className="hero__cta"
-              onClick={() => onNavigate('restaurantes')}
-            >
+            <button className="hero__cta" onClick={() => onNavigate('restaurantes')}>
               Ver restaurantes
             </button>
           </div>
@@ -76,119 +63,70 @@ export default function Home({
       </section>
 
       <section className="orange-section">
-
-        {/* Imagens fixas */}
         <div className="orange-section__featured-container">
-          <img
-            src="/hambuguer.webp"
-            alt="Hambúrguer destaque"
-            className="orange-section__featured-img"
-          />
-
-          <img
-            src="/batatas.jpg"
-            alt="Batatas destaque"
-            className="orange-section__featured-img"
-          />
+          {destaques.length > 0 ? destaques.map((item) => (
+            <div key={item.id} className="destaque-card">
+              <div className="destaque-card__img" style={{ backgroundImage: `url(${item.produto_foto})` }} />
+              <div className="destaque-card__body">
+                <h3 className="destaque-card__nome">{item.produto_nome}</h3>
+                <span className="destaque-card__preco">R$ {parseFloat(item.preco).toFixed(2)}</span>
+                <div className="destaque-card__restaurante">
+                  {item.restaurante_foto && (
+                    <img src={item.restaurante_foto} alt="" className="destaque-card__restaurante-avatar" />
+                  )}
+                  <span>{item.restaurante_nome}</span>
+                </div>
+                <button
+                  className="destaque-card__add"
+                  onClick={() => onAdicionar && onAdicionar({
+                    produto_id: item.id,
+                    nome: item.produto_nome,
+                    preco: parseFloat(item.preco),
+                    imagem: item.produto_foto,
+                    restaurante_id: item.restaurante_id,
+                    quantidade: 1,
+                  })}
+                >
+                  Adicionar ao carrinho
+                </button>
+              </div>
+            </div>
+          )) : (
+            <>
+              <div className="orange-section__featured-placeholder" />
+              <div className="orange-section__featured-placeholder" />
+              <div className="orange-section__featured-placeholder" />
+              <div className="orange-section__featured-placeholder" />
+            </>
+          )}
         </div>
 
-        {/* Cards vindos da rota */}
-        <div className="orange-section__frequent">
-          <h2 className="frequent__title">Destaques:</h2>
-
-          <div className="frequent__grid">
-            {destaques.map((item) => (
-              <div key={item.id} className="destaque-card">
-                <div
-                  className="destaque-card__img"
-                  style={{
-                    backgroundImage: `url(${item.produto_foto})`
-                  }}
-                />
-
-                <div className="destaque-card__body">
-                  <h3 className="destaque-card__nome">
-                    {item.produto_nome}
-                  </h3>
-
-                  <span className="destaque-card__preco">
-                    R$ {parseFloat(item.preco).toFixed(2)}
-                  </span>
-
-                  <div className="destaque-card__restaurante">
-                    {item.restaurante_foto && (
-                      <img
-                        src={item.restaurante_foto}
-                        alt=""
-                        className="destaque-card__restaurante-avatar"
-                      />
-                    )}
-
-                    <span>{item.restaurante_nome}</span>
-                  </div>
-
-                  <button
-                    className="destaque-card__add"
-                    onClick={() =>
-                      onAdicionar?.({
-                        produto_id: item.id,
+        {maisPedidos.length > 0 && (
+          <div className="orange-section__frequent">
+            <h2 className="frequent__title">Pedidos com frequencia:</h2>
+            <div className="frequent__grid">
+              {maisPedidos.map((item) => (
+                <div key={item.produto_id} className="destaque-card">
+                  <div className="destaque-card__img" style={{ backgroundImage: `url(${item.produto_foto})` }} />
+                  <div className="destaque-card__body">
+                    <h3 className="destaque-card__nome">{item.produto_nome}</h3>
+                    <span className="destaque-card__preco">R$ {parseFloat(item.preco).toFixed(2)}</span>
+                    <div className="destaque-card__restaurante">
+                      {item.restaurante_foto && (
+                        <img src={item.restaurante_foto} alt="" className="destaque-card__restaurante-avatar" />
+                      )}
+                      <span>{item.restaurante_nome}</span>
+                    </div>
+                    <button
+                      className="destaque-card__add"
+                      onClick={() => onAdicionar && onAdicionar({
+                        produto_id: item.produto_id,
                         nome: item.produto_nome,
                         preco: parseFloat(item.preco),
                         imagem: item.produto_foto,
                         restaurante_id: item.restaurante_id,
-                        quantidade: 1
-                      })
-                    }
-                  >
-                    Adicionar ao carrinho
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Mais pedidos do cliente */}
-        {maisPedidos.length > 0 && (
-          <div className="orange-section__frequent">
-            <h2 className="frequent__title">
-              Pedidos com frequência:
-            </h2>
-
-            <div className="frequent__grid">
-              {maisPedidos.map((item) => (
-                <div
-                  key={item.produto_id}
-                  className="destaque-card"
-                >
-                  <div
-                    className="destaque-card__img"
-                    style={{
-                      backgroundImage: `url(${item.produto_foto})`
-                    }}
-                  />
-
-                  <div className="destaque-card__body">
-                    <h3 className="destaque-card__nome">
-                      {item.produto_nome}
-                    </h3>
-
-                    <span className="destaque-card__preco">
-                      R$ {parseFloat(item.preco).toFixed(2)}
-                    </span>
-
-                    <button
-                      className="destaque-card__add"
-                      onClick={() =>
-                        onAdicionar?.({
-                          produto_id: item.produto_id,
-                          nome: item.produto_nome,
-                          preco: parseFloat(item.preco),
-                          imagem: item.produto_foto,
-                          restaurante_id: item.restaurante_id,
-                          quantidade: 1
-                        })
-                      }
+                        quantidade: 1,
+                      })}
                     >
                       Adicionar ao carrinho
                     </button>
@@ -198,7 +136,6 @@ export default function Home({
             </div>
           </div>
         )}
-
       </section>
     </div>
   )

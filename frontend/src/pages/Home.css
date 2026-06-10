@@ -102,11 +102,88 @@
   margin-top: 3.4rem;
 }
 
-.orange-section__featured-img {
-  width: 100%;
+.orange-section__featured-placeholder {
   aspect-ratio: 2 / 1;
-  object-fit: cover;
+  background: #D9C9B5;
   border-radius: 12px;
+  flex-shrink: 0;
+}
+
+.destaque-card {
+  border-radius: 12px;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: white;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  transition: transform 0.2s;
+}
+
+.destaque-card:hover {
+  transform: translateY(-4px);
+}
+
+.destaque-card__img {
+  aspect-ratio: 2 / 1;
+  background-size: cover;
+  background-position: center;
+  background-color: #D9C9B5;
+}
+
+.destaque-card__body {
+  padding: 0.75rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.destaque-card__nome {
+  font-family: 'Fredoka One', cursive;
+  font-size: 1rem;
+  color: #2C1810;
+  margin: 0;
+}
+
+.destaque-card__preco {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #D42B2B;
+}
+
+.destaque-card__restaurante {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+  font-size: 0.8rem;
+  color: #6b6375;
+  font-weight: 600;
+}
+
+.destaque-card__restaurante-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #F0E8D8;
+}
+
+.destaque-card__add {
+  margin-top: 0.5rem;
+  width: 100%;
+  padding: 0.5rem;
+  border: none;
+  border-radius: 50px;
+  background: #F28C38;
+  color: white;
+  font-family: 'Fredoka One', cursive;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+}
+
+.destaque-card__add:hover {
+  background: #D42B2B;
+  transform: scale(1.02);
 }
 
 .orange-section__frequent {
